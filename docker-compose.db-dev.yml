@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db_postgres:
+    container_name: 'postgres'
+    image: 'postgres:14.2-alpine'
+    command: postgres -c stats_temp_directory=/tmp # https://stackoverflow.com/questions/66325175/docker-container-with-postgres-warning-could-not-open-statistics-file-pg-stat
+    restart: unless-stopped
+    networks:
+      - default
+    env_file:
+      - .env.db-dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./database/db_postgres_alone:/var/lib/postgresql/data/
+
+  adminer:
+    container_name: 'adminer'
+    # depends_on:
+    #   - postgres
+    image: adminer
+    networks:
+      - default
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+networks:
+  default:
+    name: postgre-adminer-network

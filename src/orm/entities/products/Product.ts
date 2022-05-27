@@ -1,0 +1,38 @@
+import { IsUrl } from 'class-validator';
+import { Entity, Column, OneToMany } from 'typeorm';
+
+import { ProductCategory, ProductType } from 'consts';
+import { AbstractEntity } from 'utils/AbstractEntity';
+
+import { CustomerOrderItem } from '../customerOrderItems/CustomerOrderItem';
+
+@Entity('products')
+export class Product extends AbstractEntity {
+  @Column({ unique: true })
+  productTitle: string;
+
+  @Column({ unique: true, type: 'enum', enum: ProductType })
+  productType: ProductType;
+
+  @Column({ unique: true, type: 'enum', enum: ProductCategory })
+  productCategory: ProductCategory;
+
+  @Column({ type: 'smallint', name: 'quantity', default: 0 })
+  quantity: number;
+
+  @Column({ name: 'product_photo_url', nullable: true })
+  @IsUrl()
+  productPhotoUrl: string | null;
+
+  @Column({
+    name: 'resale_price_per_unit',
+    type: 'numeric',
+    precision: 5,
+    scale: 2,
+    default: 0,
+  })
+  resalePricePerUnit: number;
+
+  @OneToMany(() => CustomerOrderItem, (customerOrderItem) => customerOrderItem.product)
+  customerOrderItem: CustomerOrderItem[];
+}

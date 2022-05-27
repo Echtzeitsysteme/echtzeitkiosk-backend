@@ -1,0 +1,103 @@
+import bcrypt from 'bcryptjs';
+import { Length, IsEmail, IsDate } from 'class-validator';
+import { Entity, Column, OneToMany } from 'typeorm';
+
+import { RoleType } from 'consts/RoleType';
+import { AbstractEntity } from 'utils/AbstractEntity';
+
+import { CustomerInvoice } from '../customerInvoices/CustomerInvoice';
+import { CustomerOrder } from '../customerOrders/CustomerOrder';
+
+import { Language } from './types';
+
+@Entity('users')
+export class User extends AbstractEntity {
+  @Column({ type: 'enum', enum: RoleType, default: RoleType.STANDARD })
+  role: RoleType;
+
+  @Column({ unique: true })
+  @IsEmail()
+  email: string;
+
+  // @Exclude()
+  @Column()
+  // @Column({ select: false })
+  password: string;
+
+  @Column({ unique: true })
+  @Length(3, 30)
+  username: string;
+
+  @Column({ name: 'first_name', nullable: true })
+  firstName: string | null;
+
+  @Column({ name: 'last_name', nullable: true })
+  lastName: string | null;
+
+  @Column({
+    name: 'is_email_verified',
+    default: false,
+  })
+  isEmailVerified: boolean;
+
+  @Column({
+    name: 'is_first_time_login',
+    default: true,
+  })
+  isFirstTimeLogin: boolean;
+
+  @Column({
+    name: 'is_approved',
+    default: false,
+  })
+  isApproved: boolean;
+
+  @Column({
+    name: 'is_active',
+    default: true,
+  })
+  isActive: boolean;
+
+  @Column({ name: 'active_till', nullable: true })
+  @IsDate()
+  activeTill: Date | null;
+
+  @Column({
+    default: 'de-DE' as Language,
+    length: 15,
+  })
+  language: string; // required for emails
+
+  @Column({ name: 'last_login', nullable: true })
+  @IsDate()
+  lastLogin: Date | null;
+
+  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0 })
+  balance: number;
+
+  @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user)
+  customerOrders: CustomerOrder[];
+
+  @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user)
+  customerInvoices: CustomerInvoice[];
+
+  setLanguage(language: Language) {
+    this.language = language;
+  }
+
+  getVerifyEmailToken() {
+    return 'verifyEmailToken'; //! TODO implement
+  }
+
+  getResetPasswordToken() {
+    return 'resetPasswordToken'; //! TODO implement
+  }
+
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
+
+  checkIfPasswordMatch(unencryptedPassword: string) {
+    return bcrypt.compareSync(unencryptedPassword, this.password);
+  }
+}
