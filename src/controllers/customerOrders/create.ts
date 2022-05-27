@@ -31,6 +31,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
     const customerOrder = new CustomerOrder();
     customerOrder.user = user;
+
     await customerOrderRepository.save(customerOrder);
 
     for await (const customerOrderItem of customerOrderItems) {
@@ -69,12 +70,16 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
       });
     }
 
+    customerOrder.total = Math.round(customerOrder.total * 100) / 100;
     await customerOrderRepository.save(customerOrder);
     user.balance -= customerOrder.total;
     user.balance = Math.round(user.balance * 100) / 100;
+
     await userRepository.save(user);
 
-    res.customSuccess(200, 'Customer order successfully saved.', customerOrder);
+    delete customerOrder.user;
+
+    res.customSuccess(200, 'Customer order successfully saved.', { ...customerOrder, balanceAfterOrder: user.balance });
   } catch (err) {
     console.error(err);
     next(new CustomError(400, 'Raw', 'Error creating customer order', null, err));

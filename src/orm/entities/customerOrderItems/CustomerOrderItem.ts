@@ -7,7 +7,9 @@ import { Product } from '../products/Product';
 
 @Entity('customer_order_items', { schema: 'public' })
 export class CustomerOrderItem extends AbstractEntity {
-  @ManyToOne(() => Product, (product) => product.id)
+  @ManyToOne(() => Product, (product) => product.id, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn([{ name: 'product_id', referencedColumnName: 'id' }])
   product: Product;
 
@@ -31,7 +33,9 @@ export class CustomerOrderItem extends AbstractEntity {
   @Column('smallint', { name: 'quantity', default: 0 })
   quantity: number;
 
-  @ManyToOne(() => CustomerOrder, (customerOrder) => customerOrder.customerOrderItems)
+  @ManyToOne(() => CustomerOrder, (customerOrder) => customerOrder.customerOrderItems, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn([{ name: 'customer_order_id', referencedColumnName: 'id' }])
   customerOrder: CustomerOrder;
 }

@@ -35,12 +35,12 @@ export const createSuperuserIfnotExists = async (): Promise<void> => {
 
 export const createSystemStateTableIfNotExists = async (): Promise<void> => {
   const systemStateRepository = getRepository(SystemState);
-  const systemStateArray = await systemStateRepository.find({
-    order: { id: 'DESC' },
-    take: 1,
-  });
 
-  const systemState = systemStateArray[0];
+  // get the oldest system state, if it exists. check creation date
+  const systemState = await systemStateRepository
+    .createQueryBuilder('systemState')
+    .orderBy('systemState.createdAt', 'ASC')
+    .getOne();
 
   if (!systemState) {
     const systemState = new SystemState();

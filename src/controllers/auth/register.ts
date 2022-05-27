@@ -26,12 +26,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       return next(customError);
     }
 
-    const systemStateArray = await systemStateRepository.find({
-      order: { id: 'DESC' },
-      take: 1,
-    });
-
-    const systemState = systemStateArray[0];
+    const systemState = await systemStateRepository
+      .createQueryBuilder('systemState')
+      .orderBy('systemState.createdAt', 'ASC')
+      .getOne();
 
     if (!systemState.invitationCode || systemState.invitationCode !== invitationCode) {
       const customError = new CustomError(400, 'General', 'Invitation code is not valid', [

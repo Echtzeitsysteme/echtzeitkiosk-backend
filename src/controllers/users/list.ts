@@ -7,8 +7,8 @@ import { CustomError } from 'utils/response/custom-error/CustomError';
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   const userRepository = getRepository(User);
   try {
+    // populate user.customerOrders
     const users = await userRepository.find({
-      // select: ['id', 'username', 'name', 'email', 'role', 'language', 'created_at', 'updated_at'],
       select: [
         'id',
         'username',
@@ -25,6 +25,7 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
         'firstName',
         'lastName',
       ],
+      relations: ['customerOrders'],
     });
 
     res.customSuccess(200, 'List of users.', users);
