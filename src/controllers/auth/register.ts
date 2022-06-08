@@ -4,11 +4,10 @@ import { getRepository } from 'typeorm';
 import { RoleType } from 'consts/RoleType';
 import { SystemState } from 'orm/entities/systemState/SystemState';
 import { User } from 'orm/entities/users/User';
-import {
-  sendVerificationEmail,
-  sendRegistrationRequestReceivedEmailToUser,
-  sendUserRegisteredEmailToSuperuser,
-} from 'services/email';
+import // sendVerificationEmail,
+// sendRegistrationRequestReceivedEmailToUser,
+// sendUserRegisteredEmailToSuperuser,
+'services/email';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
@@ -55,9 +54,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       // delete password from the newUser object before sending it to the client
       delete newUser.password;
 
-      sendVerificationEmail(newUser);
-      sendRegistrationRequestReceivedEmailToUser(newUser);
-      sendUserRegisteredEmailToSuperuser(newUser);
+      // sendVerificationEmail(newUser);
+      // sendRegistrationRequestReceivedEmailToUser(newUser);
+      // sendUserRegisteredEmailToSuperuser(newUser);
 
       return res.customSuccess(200, 'User successfully created.', newUser);
     } catch (err) {

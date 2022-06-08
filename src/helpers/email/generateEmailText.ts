@@ -181,6 +181,21 @@ const generateEmailTextForGerman = (emailType: EmailType, user: User) => {
   
         Diese E-Mail wurde automatisch erstellt, bitte antworten Sie nicht darauf.
             `;
+
+    case EmailType.MONTHLY_INVOICE:
+      return `Hallo Frau/Herr ${user.lastName},
+
+        
+
+        `;
+
+    // Sie haben eine Rechnung für den Monat ${moment(invoice.month).format('MMMM YYYY')} erhalten.
+
+    // Ihr Konto: ${user.username}
+    // Ihre E-Mail-Adresse: ${user.email}
+    // Rechnungsnummer: ${invoice.number}
+    // Rechnungsdatum: ${moment(invoice.date).format('DD.MM.YYYY')}
+    // Betrag: ${invoice.amount} €
   }
 };
 
@@ -208,6 +223,9 @@ const generateEmailTextForEnglish = (emailType: EmailType, user: User) => {
     case EmailType.REGISTRATION_REQUEST_RECEIVED_EMAIL_TO_USER:
       return ``;
     case EmailType.ACCOUNT_DELETED:
+      return ``;
+
+    case EmailType.MONTHLY_INVOICE:
       return ``;
   }
 };

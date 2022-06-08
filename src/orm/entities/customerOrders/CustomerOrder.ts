@@ -1,7 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { AbstractEntity } from 'utils/AbstractEntity';
+import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
+import { CustomerInvoice } from '../customerInvoices/CustomerInvoice';
 import { CustomerOrderItem } from '../customerOrderItems/CustomerOrderItem';
 import { User } from '../users/User';
 
@@ -12,6 +14,7 @@ export class CustomerOrder extends AbstractEntity {
     scale: 2,
     nullable: true,
     type: 'numeric',
+    transformer: new ColumnNumericTransformer(),
   })
   total: number | null;
 
@@ -19,8 +22,14 @@ export class CustomerOrder extends AbstractEntity {
   customerOrderItems: CustomerOrderItem[];
 
   @ManyToOne(() => User, (user) => user.customerOrders, {
-    onDelete: 'CASCADE',
+    // onDelete: 'CASCADE',
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User = new User();
+
+  @ManyToOne(() => CustomerInvoice, (customerInvoice) => customerInvoice.customerOrders, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn([{ name: 'monthly_customer_invoice_id', referencedColumnName: 'id' }])
+  customerInvoice: CustomerInvoice = new CustomerInvoice();
 }

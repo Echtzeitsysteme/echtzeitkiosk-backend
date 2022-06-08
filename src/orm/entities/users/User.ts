@@ -4,6 +4,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 
 import { RoleType } from 'consts/RoleType';
 import { AbstractEntity } from 'utils/AbstractEntity';
+import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
 import { CustomerInvoice } from '../customerInvoices/CustomerInvoice';
 import { CustomerOrder } from '../customerOrders/CustomerOrder';
@@ -20,7 +21,7 @@ export class User extends AbstractEntity {
   email: string;
 
   // @Exclude()
-  @Column()
+  @Column({ nullable: true })
   // @Column({ select: false })
   password: string;
 
@@ -72,7 +73,7 @@ export class User extends AbstractEntity {
   @IsDate()
   lastLogin: Date | null;
 
-  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0 })
+  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
   balance: number;
 
   @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user)

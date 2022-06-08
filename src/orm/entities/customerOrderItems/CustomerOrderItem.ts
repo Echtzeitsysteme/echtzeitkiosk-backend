@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { AbstractEntity } from 'utils/AbstractEntity';
+import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
 import { CustomerOrder } from '../customerOrders/CustomerOrder';
 import { Product } from '../products/Product';
@@ -18,6 +19,7 @@ export class CustomerOrderItem extends AbstractEntity {
     precision: 5,
     scale: 2,
     default: 0,
+    transformer: new ColumnNumericTransformer(),
   })
   subtotal: number;
 
@@ -27,6 +29,7 @@ export class CustomerOrderItem extends AbstractEntity {
     precision: 5,
     scale: 2,
     default: 0,
+    transformer: new ColumnNumericTransformer(),
   })
   pricePerUnit: number;
 

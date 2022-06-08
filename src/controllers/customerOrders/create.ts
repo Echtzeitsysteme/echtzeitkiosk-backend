@@ -78,6 +78,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     await userRepository.save(user);
 
     delete customerOrder.user;
+    delete customerOrder.customerInvoice;
 
     res.customSuccess(200, 'Customer order successfully saved.', { ...customerOrder, balanceAfterOrder: user.balance });
   } catch (err) {

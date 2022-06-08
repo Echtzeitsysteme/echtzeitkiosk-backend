@@ -3,6 +3,7 @@ import { Entity, Column, OneToMany } from 'typeorm';
 
 import { ProductCategory, ProductType } from 'consts';
 import { AbstractEntity } from 'utils/AbstractEntity';
+import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
 import { CustomerOrderItem } from '../customerOrderItems/CustomerOrderItem';
 
@@ -30,6 +31,7 @@ export class Product extends AbstractEntity {
     precision: 5,
     scale: 2,
     default: 0,
+    transformer: new ColumnNumericTransformer(),
   })
   resalePricePerUnit: number;
 

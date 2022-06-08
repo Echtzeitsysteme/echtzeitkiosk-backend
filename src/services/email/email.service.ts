@@ -76,3 +76,9 @@ export const sendPasswordChangedEmail = async (user: User) => {
   const subject = generateEmailSubject(EmailType.PASSWORD_CHANGED, user);
   await sendEmail(user.email, subject, text);
 };
+
+export const sendMonthlyInvoiceEmail = async (user: User) => {
+  const text = generateEmailText(EmailType.MONTHLY_INVOICE, user);
+  const subject = generateEmailSubject(EmailType.MONTHLY_INVOICE, user);
+  await sendEmail(user.email, subject, text);
+};
