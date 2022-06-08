@@ -64,7 +64,7 @@ const envVarsSchema = z.object({
   SUPERUSER_PASSWORD: z.string(),
   INVITATION_CODE: z.string().default('fa8ae7c0-03d9-4c26-9405-ad9551d4ceda'),
 
-  MONTHLY_INVOICE_CRON_JOB_STRING: z.string(),
+  MONTHLY_INVOICE_CRON_JOB_STRING: z.string().default('0 0 5 1 * *'), // At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
 });
 
 const envVars = envVarsSchema.parse(process.env);
