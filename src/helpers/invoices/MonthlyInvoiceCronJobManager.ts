@@ -100,9 +100,3 @@ export class MonthlyInvoiceCronJobManager {
 // }
 
 // scheduler('key', ' * * * * *', callback);
-
-// User 1
-// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFmYzAxMTVkLWEwMzctNGUzMS04ZWI5LTNiNWM4NGZiZmVjNiIsInJvbGUiOiJTVEFOREFSRCIsImlhdCI6MTY1NDcwMjQ5Mzc0MywiZXhwIjoxNjU0NzM0MDI5NzQzfQ.Kb3ehgslfonWa42MRCD60s8o_iH1y81OijaEFG9ADMQ
-
-// User 2
-// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjRkYmUxYzQ0LWRhYTQtNGZhNy05ZTcwLTRkY2NlNTE1ZjE0MyIsInJvbGUiOiJTVEFOREFSRCIsImlhdCI6MTY1NDcwMDg5MTIyMSwiZXhwIjoxNjU0NzMyNDI3MjIxfQ.Ozb0IbH6IH1QPkYR0EsvjvZhq3JjNSu4IiYB5_X3298
