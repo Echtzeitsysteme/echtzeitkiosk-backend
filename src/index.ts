@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import './utils/response/customSuccess';
+import { MonthlyInvoiceCronJobManager } from 'helpers/invoices';
 import { createSuperuserIfnotExists, createSystemStateTableIfNotExists } from 'helpers/users/superuserHelpers';
 
 import { errorHandler } from './middleware/errorHandler';
@@ -51,4 +52,10 @@ app.listen(port, () => {
   await createSuperuserIfnotExists();
 
   await createSystemStateTableIfNotExists();
+
+  console.log(`Current Date Time: ${new Date()}`);
+  MonthlyInvoiceCronJobManager.startAllJobs();
+  console.log('MonthlyInvoiceCronJobManager:', MonthlyInvoiceCronJobManager.getAllJobs());
+
+  //print current date time
 })();

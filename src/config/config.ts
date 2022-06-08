@@ -63,6 +63,8 @@ const envVarsSchema = z.object({
   SUPERUSER_EMAIL: z.string().email(),
   SUPERUSER_PASSWORD: z.string(),
   INVITATION_CODE: z.string().default('fa8ae7c0-03d9-4c26-9405-ad9551d4ceda'),
+
+  MONTHLY_INVOICE_CRON_JOB_STRING: z.string(),
 });
 
 const envVars = envVarsSchema.parse(process.env);
@@ -75,6 +77,7 @@ export const config = {
     frontendURL: envVars.FRONTEND_URL,
     projectName: envVars.PROJECT_NAME,
     invitationCode: envVars.INVITATION_CODE,
+    monthlyInvoiceCronJobString: envVars.MONTHLY_INVOICE_CRON_JOB_STRING,
   },
   postgres: {
     host: envVars.POSTGRES_HOST,
