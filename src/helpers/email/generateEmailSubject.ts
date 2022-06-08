@@ -27,6 +27,9 @@ const generateEmailSubjectForGerman = (emailType: EmailType) => {
 
     case EmailType.ACCOUNT_DELETED:
       return `Ihr ${config.deployment.projectName}-Konto wurde gelöscht`;
+
+    case EmailType.MONTHLY_INVOICE:
+      return `Hallo,...`;
   }
 };
 
@@ -54,6 +57,9 @@ const generateEmailSubjectForEnglish = (emailType: EmailType) => {
       return ``;
 
     case EmailType.ACCOUNT_DELETED:
+      return ``;
+
+    case EmailType.MONTHLY_INVOICE:
       return ``;
   }
 };
