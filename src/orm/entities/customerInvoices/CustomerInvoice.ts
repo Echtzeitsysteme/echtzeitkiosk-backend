@@ -1,6 +1,6 @@
 import { Entity, JoinColumn, ManyToOne, Column, OneToMany } from 'typeorm';
 
-import { CustomerInvoiceType } from 'consts/CustomerInvoiceType';
+import { CustomerInvoiceType, CustomerInvoiceStatus } from 'consts/CustomerInvoice';
 import { AbstractEntity } from 'utils/AbstractEntity';
 import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
@@ -51,4 +51,12 @@ export class CustomerInvoice extends AbstractEntity {
     default: CustomerInvoiceType.MONTHLY,
   })
   customerInvoiceType: CustomerInvoiceType;
+
+  @Column({
+    name: 'customer_invoice_status',
+    type: 'enum',
+    enum: CustomerInvoiceStatus,
+    default: CustomerInvoiceStatus.PENDING,
+  })
+  customerInvoiceStatus: CustomerInvoiceStatus;
 }

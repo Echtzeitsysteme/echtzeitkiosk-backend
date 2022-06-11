@@ -5,6 +5,7 @@ import { config } from 'config/config';
 import { EmailType } from 'consts/EmailType';
 import { generateEmailText, generateEmailSubject } from 'helpers/email';
 import { getSuperuser } from 'helpers/users/superuserHelpers';
+import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
 import { User } from 'orm/entities/users/User';
 
 export const sendEmail = async (to: string, subject: string, text: string) => {
@@ -77,8 +78,15 @@ export const sendPasswordChangedEmail = async (user: User) => {
   await sendEmail(user.email, subject, text);
 };
 
-export const sendMonthlyInvoiceEmail = async (user: User) => {
-  const text = generateEmailText(EmailType.MONTHLY_INVOICE, user);
-  const subject = generateEmailSubject(EmailType.MONTHLY_INVOICE, user);
+export const sendMonthlyInvoiceEmailToCustomer = async (user: User, customerInvoice: CustomerInvoice) => {
+  // const text = generateEmailText(EmailType.MONTHLY_INVOICE, user, customerInvoice); // TODO: implement
+  // const subject = generateEmailSubject(EmailType.MONTHLY_INVOICE, user, customerInvoice); // TODO: implement
+
+  const customerInvoiceURL = `${config.deployment.backendURL}/customer-invoices/${customerInvoice.id}/generate-customer-invoice-pdf`;
+  const customerInvoiceMonthYear = customerInvoice.customerInvoiceMonthYear;
+
+  const subject = `Echtzeitkiosk Invoice For ${customerInvoiceMonthYear}`;
+  const text = `${customerInvoiceURL}`;
+
   await sendEmail(user.email, subject, text);
 };

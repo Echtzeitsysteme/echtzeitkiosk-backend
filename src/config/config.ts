@@ -59,6 +59,7 @@ const envVarsSchema = z.object({
 
   PROJECT_NAME: z.string().default('Echtzeitkiosk'),
   FRONTEND_URL: z.string().default('http://localhost:3000'),
+  BACKEND_URL: z.string().default('http://localhost:4000/v1'),
 
   SUPERUSER_EMAIL: z.string().email(),
   SUPERUSER_PASSWORD: z.string(),
@@ -75,6 +76,7 @@ export const config = {
   projectName: envVars.PROJECT_NAME,
   deployment: {
     frontendURL: envVars.FRONTEND_URL,
+    backendURL: envVars.BACKEND_URL,
     projectName: envVars.PROJECT_NAME,
     invitationCode: envVars.INVITATION_CODE,
     monthlyInvoiceCronJobString: envVars.MONTHLY_INVOICE_CRON_JOB_STRING,
@@ -100,6 +102,10 @@ export const config = {
       auth: {
         user: envVars.SMTP_USERNAME,
         pass: envVars.SMTP_PASSWORD,
+      },
+      tls: {
+        ciphers: 'SSLv3', // gmx.com SETUP
+        rejectUnauthorized: false, // gmx.com SETUP
       },
     },
     from: { name: envVars.EMAIL_FROM_NAME, address: envVars.EMAIL_FROM_ADDRESS },

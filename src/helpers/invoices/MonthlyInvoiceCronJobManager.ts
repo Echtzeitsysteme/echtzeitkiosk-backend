@@ -79,13 +79,8 @@ export class MonthlyInvoiceCronJobManager {
   }
 
   public static async sendMonthlyInvoices() {
-    console.log('Sending monthly invoices...');
     await generateMonthlyInvoices();
-    console.log('Monthly invoices are created.');
-
-    console.log('Sending monthly invoices to customers...');
     await sendMonthlyInvoicesToCustomers();
-    console.log('Monthly invoices are sent to customers.');
   }
 }
 
