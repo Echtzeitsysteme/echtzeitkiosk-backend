@@ -9,6 +9,8 @@ import { sendMonthlyInvoiceEmailToCustomer } from '../../services/email/email.se
 
 // iterate over all users. For each user, check if the user has a customer invoice for the current month. If not, create a new customer invoice for the user. If the user has a customer invoice for the current month, then skip it. And then iterate over all customer orders for the user and then update the customer invoice balance and content.
 export const generateMonthlyInvoices = async () => {
+  console.log('generateMonthlyInvoices()');
+
   const customerOrderRepository = getRepository(CustomerOrder);
   const userRepository = getRepository(User);
   const customerInvoiceRepository = getRepository(CustomerInvoice);
@@ -34,6 +36,8 @@ export const generateMonthlyInvoices = async () => {
       newCustomerInvoice.total = 0;
       newCustomerInvoice.currentUserBalance = user.balance;
 
+      await customerInvoiceRepository.save(newCustomerInvoice);
+
       const customerOrders = await customerOrderRepository.find({
         where: {
           user: user,
@@ -42,7 +46,10 @@ export const generateMonthlyInvoices = async () => {
 
       for await (const customerOrder of customerOrders) {
         newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
-        if (!customerOrder.customerInvoice) customerOrder.customerInvoice = newCustomerInvoice;
+        if (!customerOrder.monthly_customer_invoice_id) {
+          customerOrder.customerInvoice = newCustomerInvoice;
+          await customerOrderRepository.save(customerOrder);
+        }
       }
 
       await customerInvoiceRepository.save(newCustomerInvoice);
@@ -55,6 +62,8 @@ export const generateMonthlyInvoices = async () => {
  * Send a link to the customer to generate and download the invoice
  */
 export const sendMonthlyInvoicesToCustomers = async () => {
+  console.log('sendMonthlyInvoicesToCustomers()');
+
   const customerInvoiceRepository = getRepository(CustomerInvoice);
   const userRepository = getRepository(User);
 
@@ -65,11 +74,8 @@ export const sendMonthlyInvoicesToCustomers = async () => {
     },
   });
 
-  // console.log('customerInvoices', customerInvoices);
-
   for await (const customerInvoice of customerInvoices) {
     const user = await userRepository.findOne(customerInvoice.user);
-    if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
 
     if (customerInvoice.customerInvoiceStatus === CustomerInvoiceStatus.PENDING) {
       console.log(`Sending monthly invoice to ${user.email}`);

@@ -10,12 +10,17 @@ export const generateCustomerInvoicePDF = async (req: Request, res: Response, ne
   const customerInvoiceRepository = getRepository(CustomerInvoice);
 
   try {
-    const customerInvoice = await customerInvoiceRepository.findOne(req.params.id);
+    const customerInvoice = await customerInvoiceRepository.findOne({
+      where: { id: req.params.id },
+      relations: ['user'],
+    });
+
     if (!customerInvoice)
       return next(new CustomError(404, 'General', `Customer invoice with id ${req.params.id} not found.`));
 
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne(customerInvoice.user);
+    const user = await userRepository.findOne({ where: { id: customerInvoice.user.id } });
+
     if (!user) return next(new CustomError(404, 'General', `User with id ${customerInvoice.user} not found.`));
 
     const customerInvoiceMonthYear = customerInvoice.customerInvoiceMonthYear;

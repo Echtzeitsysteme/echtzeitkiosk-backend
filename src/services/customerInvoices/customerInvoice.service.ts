@@ -1,555 +1,623 @@
 import pdfKit from 'pdfkit';
+import { getRepository } from 'typeorm';
 
 import { config } from 'config/config';
 import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
+import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { User } from 'orm/entities/users/User';
 
 export const generateCustomerInvoicePDFandPipeToResponse = async (
   res: any,
-  user?: User,
-  customerInvoice?: CustomerInvoice,
+  user: User,
+  customerInvoice: CustomerInvoice,
 ) => {
   const fontNormal = 'Helvetica';
   const fontBold = 'Helvetica-Bold';
   const companyLogo = './es_logo_gross.jpeg';
 
-  const orderInfo = {
-    orderNo: '15484659',
-    invoiceNo: 'MH-MU-1077',
-    invoiceDate: '11/05/2021',
-    invoiceTime: '10:57:00 PM',
-    products: [
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-      {
-        id: '15785',
-        name: 'Acer Aspire E573',
-        company: 'Acer',
-        unitPrice: 39999,
-        totalPrice: 39999,
-        qty: 1,
-      },
-      {
-        id: '15786',
-        name: 'Dell Magic Mouse WQ1545',
-        company: 'Dell',
-        unitPrice: 2999,
-        totalPrice: 5998,
-        qty: 2,
-      },
-    ],
-    totalValue: 45997,
-  };
+  // const orderInfo = {
+  //   orderNo: '15484659',
+  //   invoiceNo: 'MH-MU-1077',
+  //   invoiceDate: '11/05/2021',
+  //   invoiceTime: '10:57:00 PM',
+  //   products: [
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //     {
+  //       id: '15785',
+  //       name: 'Acer Aspire E573',
+  //       company: 'Acer',
+  //       unitPrice: 39999,
+  //       totalPrice: 39999,
+  //       qty: 1,
+  //     },
+  //     {
+  //       id: '15786',
+  //       name: 'Dell Magic Mouse WQ1545',
+  //       company: 'Dell',
+  //       unitPrice: 2999,
+  //       totalPrice: 5998,
+  //       qty: 2,
+  //     },
+  //   ],
+  //   totalValue: 45997,
+  // };
+
+  // const invoiceRowObject = {
+  //   rowId: '',
+  //   orderDate: '',
+  //   product: '',
+  //   qty: '',
+  //   unitPrice: '',
+  //   subTotal: '',
+  // };
+
+  const invoiceRows = [];
+  const customerOrderRepository = getRepository(CustomerOrder);
+
+  console.log('🚀 ~ file: customerInvoice.service.ts ~ line 571 ~ customerInvoice.id', customerInvoice.id);
+
+  // find all customer orders
+  // const customerOrders = await customerOrderRepository.find({
+  //   relations: ['customerInvoice', 'user'],
+  //   where: {
+  //     monthly_customer_invoice_id: customerInvoice.id,
+  //   },
+  // });
+
+  try {
+    // find all customer orders by customer invoice id and get also customerOrder.customerOrderItem.product
+    // const customerOrders = await customerOrderRepository.find({
+    //   relations: ['customerInvoice', 'customerOrderItems'],
+    //   where: {
+    //     customerInvoice: customerInvoice.id,
+    //   },
+    //   order: {
+    //     createdAt: 'ASC',
+    //   },
+    // });
+    const customerOrders = await customerOrderRepository
+      .createQueryBuilder('customerOrder')
+      .leftJoinAndSelect('customerOrder.customerOrderItems', 'customerOrderItem')
+      .leftJoinAndSelect('customerOrderItem.product', 'product')
+      .where('customerOrder.monthly_customer_invoice_id = :id', { id: customerInvoice.id })
+      .orderBy('customerOrder.createdAt', 'ASC')
+      .getMany();
+
+    // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 595 ~ customerOrders', customerOrders);
+
+    let rowId = 1;
+
+    customerOrders.forEach((customerOrder) => {
+      customerOrder.customerOrderItems.forEach((customerOrderItem) => {
+        const invoiceRowObject = {
+          rowId: rowId,
+          orderDate: customerOrder.createdAt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }),
+          product: customerOrderItem.product.productTitle,
+          qty: customerOrderItem.quantity,
+          unitPrice: customerOrderItem.pricePerUnit,
+          subTotal: customerOrderItem.subtotal,
+        };
+
+        invoiceRows.push(invoiceRowObject);
+        rowId++;
+      });
+    });
+
+    console.log('🚀 ~ file: customerInvoice.service.ts ~ line 609 ~ invoiceRows', invoiceRows);
+  } catch (error) {
+    console.log(error);
+  }
 
   function createPdf() {
     try {
@@ -595,7 +663,7 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       });
 
       pdfDoc.rect(7, 250, 580, 20).fill('#1e1cc8').stroke('#1e1cc8');
-      pdfDoc.fillColor('#fff').text('#', 20, 256, { width: 90 });
+      pdfDoc.fillColor('#fff').text('#', 20, 256, { width: 90 }); // order number
       pdfDoc.text('Order Date', 60, 256, { width: 190 });
       pdfDoc.text('Item Description', 200, 256, { width: 190 });
       pdfDoc.text('Price(€)', 400, 256, { width: 100 });
@@ -606,20 +674,51 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       let pageNo = 1;
       let y = 256; // TODO change it after the last layout
 
-      orderInfo.products.forEach((element) => {
-        // console.log('adding', element.name);
+      // orderInfo.products.forEach((element) => {
+      //   if (pageNo === 1) {
+      //     y = 256 + productNo * 20;
+      //   } else {
+      //     y = 50 + productNo * 20;
+      //   }
+
+      //   pdfDoc.fillColor('#000').text(element.id, 20, y, { width: 90 }); // order number
+      //   pdfDoc.text(element.name, 60, y, { width: 190 });
+      //   pdfDoc.text(element.name, 200, y, { width: 190 });
+      //   pdfDoc.text(element.unitPrice.toString(), 400, y, { width: 100 });
+      //   pdfDoc.text(element.totalPrice.toString(), 450, y, { width: 100 });
+      //   pdfDoc.text(element.totalPrice.toString(), 500, y, { width: 100 });
+
+      //   productNo++;
+
+      //   if (pageNo === 1 && productNo > 20) {
+      //     pdfDoc.addPage();
+      //     productNo = 1;
+      //     pageNo++;
+      //     y = 0;
+      //   }
+      //   if (pageNo !== 1 && productNo > 35) {
+      //     pdfDoc.addPage();
+      //     productNo = 1;
+      //     pageNo++;
+      //     y = 0;
+      //   }
+      // });
+
+      // use invoiceRows instead of orderInfo.products
+      invoiceRows.forEach((element) => {
         if (pageNo === 1) {
           y = 256 + productNo * 20;
         } else {
           y = 50 + productNo * 20;
         }
 
-        pdfDoc.fillColor('#000').text(element.id, 20, y, { width: 90 });
-        pdfDoc.text(element.name, 60, y, { width: 190 });
-        pdfDoc.text(element.name, 200, y, { width: 190 });
+        pdfDoc.fillColor('#000').text(element.rowId.toString(), 20, y, { width: 90 }); // order number
+        pdfDoc.text(element.orderDate, 60, y, { width: 190 });
+        pdfDoc.text(element.product, 200, y, { width: 190 });
         pdfDoc.text(element.unitPrice.toString(), 400, y, { width: 100 });
-        pdfDoc.text(element.totalPrice.toString(), 450, y, { width: 100 });
-        pdfDoc.text(element.totalPrice.toString(), 500, y, { width: 100 });
+        pdfDoc.text(element.qty.toString(), 450, y, { width: 100 });
+        pdfDoc.text(element.subTotal.toString(), 500, y, { width: 100 });
+
         productNo++;
 
         if (pageNo === 1 && productNo > 20) {
@@ -650,7 +749,7 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       }
 
       pdfDoc.font(fontBold).text('Total:', 350, y + 30);
-      pdfDoc.font(fontBold).text(orderInfo.totalValue.toString(), 450, y + 30);
+      pdfDoc.font(fontBold).text(`${customerInvoice.total.toString() + ' €'}`, 450, y + 30);
 
       pdfDoc.end();
 

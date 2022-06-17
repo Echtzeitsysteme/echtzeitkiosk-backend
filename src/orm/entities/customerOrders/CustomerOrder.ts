@@ -9,6 +9,8 @@ import { User } from '../users/User';
 
 @Entity('customer_orders', { schema: 'public' })
 export class CustomerOrder extends AbstractEntity {
+  [x: string]: any; // for monthly_customer_invoice_id
+
   @Column({
     precision: 5,
     scale: 2,
