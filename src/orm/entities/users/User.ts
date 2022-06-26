@@ -76,6 +76,16 @@ export class User extends AbstractEntity {
   @Column({ type: 'numeric', precision: 5, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
   balance: number;
 
+  @Column({
+    type: 'numeric',
+    name: 'total_spent',
+    precision: 5,
+    scale: 2,
+    default: 0,
+    transformer: new ColumnNumericTransformer(),
+  })
+  totalSpent: number; // TODO use/implement this field
+
   @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user)
   customerOrders: CustomerOrder[];
 

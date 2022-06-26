@@ -565,7 +565,7 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
   const invoiceRows = [];
   const customerOrderRepository = getRepository(CustomerOrder);
 
-  console.log('🚀 ~ file: customerInvoice.service.ts ~ line 571 ~ customerInvoice.id', customerInvoice.id);
+  // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 571 ~ customerInvoice.id', customerInvoice.id);
 
   // find all customer orders
   // const customerOrders = await customerOrderRepository.find({
@@ -614,7 +614,7 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       });
     });
 
-    console.log('🚀 ~ file: customerInvoice.service.ts ~ line 609 ~ invoiceRows', invoiceRows);
+    // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 609 ~ invoiceRows', invoiceRows);
   } catch (error) {
     console.log(error);
   }
@@ -750,6 +750,9 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
 
       pdfDoc.font(fontBold).text('Total:', 350, y + 30);
       pdfDoc.font(fontBold).text(`${customerInvoice.total.toString() + ' €'}`, 450, y + 30);
+
+      pdfDoc.font(fontBold).text('User Balance:', 350, y + 50);
+      pdfDoc.font(fontBold).text(`${user.balance.toString() + ' €'}`, 450, y + 50);
 
       pdfDoc.end();
 

@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import moment from 'moment';
 import { getRepository } from 'typeorm';
 
 // import { RoleType } from 'consts/RoleType';
+import { config } from 'config/config';
 import { User } from 'orm/entities/users/User';
 import { JwtPayload } from 'types/JwtPayload';
 import { createJwtToken } from 'utils/createJwtToken';
@@ -27,7 +29,8 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const jwtPayload: JwtPayload = {
       id: user.id,
       role: user.role,
-      iat: new Date().getTime(),
+      iat: moment().unix(),
+      exp: moment().add(config.jwt.accessExpirationMinutes, 'minutes').unix(),
     };
 
     try {

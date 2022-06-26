@@ -30,7 +30,6 @@ const envVarsSchema = z.object({
     .string()
     .default('30')
     .transform((str) => parseInt(str, 10)),
-
   // minutes after which reset password token expires
   JWT_RESET_PASSWORD_EXPIRATION_MINUTES: z
     .string()
