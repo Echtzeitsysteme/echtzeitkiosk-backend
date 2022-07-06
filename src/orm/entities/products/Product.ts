@@ -15,7 +15,7 @@ export class Product extends AbstractEntity {
   @Column({ unique: true, type: 'enum', enum: ProductType })
   productType: ProductType;
 
-  @Column({ unique: true, type: 'enum', enum: ProductCategory })
+  @Column({ type: 'enum', enum: ProductCategory })
   productCategory: ProductCategory;
 
   @Column({ type: 'smallint', name: 'quantity', default: 0 })

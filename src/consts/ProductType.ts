@@ -3,4 +3,5 @@ export enum ProductType {
   BIER_33CL,
   BIER_50CL,
   COLA_33CL,
+  FANTA_33CL,
 }
