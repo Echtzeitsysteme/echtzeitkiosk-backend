@@ -1,23 +1,25 @@
 import CronJobManager from 'cron-job-manager';
 
-// import { config } from 'config/config';
+import { config } from 'config/config';
 
 import { generateMonthlyInvoices, sendMonthlyInvoicesToCustomers } from './monthlyInvoiceHelpers';
 
 export class MonthlyInvoiceCronJobManager {
   private static cronJobManager: CronJobManager = new CronJobManager(
     'MONTHLY_INVOICE_CRON_JOB',
-    // config.deployment.monthlyInvoiceCronJobString, // At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
+    config.deployment.monthlyInvoiceCronJobString, // At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
 
-    (() => {
-      const date = new Date();
-      date.setSeconds(date.getSeconds() + 1);
+    // (() => {
+    //   const date = new Date();
+    //   date.setSeconds(date.getSeconds() + 3);
 
-      return date;
-    })(),
+    //   return date;
+    // })(),
+
     async () => {
       await MonthlyInvoiceCronJobManager.sendMonthlyInvoices();
     },
+
     {
       // extra options..
       // see https://www.npmjs.com/package/cron for all available

@@ -97,6 +97,7 @@ export const config = {
   email: {
     smtp: {
       host: envVars.SMTP_HOST,
+      greetingTimeout: 1000 * 60, // 1 minute
       port: envVars.SMTP_PORT,
       auth: {
         user: envVars.SMTP_USERNAME,

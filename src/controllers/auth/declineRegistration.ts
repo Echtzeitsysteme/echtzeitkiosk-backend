@@ -4,9 +4,10 @@ import { getRepository } from 'typeorm';
 import { User } from 'orm/entities/users/User';
 import { sendRegistrationDeclinationEmailToUser } from 'services/email';
 import { deleteUser } from 'services/users';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const declineRegistration = async (req: Request, res: Response, next: NextFunction) => {
+export const declineRegistration = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   const userRepository = getRepository(User);
@@ -38,4 +39,4 @@ export const declineRegistration = async (req: Request, res: Response, next: Nex
     const customError = new CustomError(400, 'Raw', `Can't decline user.`, null, err);
     return next(customError);
   }
-};
+});

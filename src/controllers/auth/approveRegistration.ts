@@ -3,9 +3,10 @@ import { getRepository } from 'typeorm';
 
 import { User } from 'orm/entities/users/User';
 import { sendRegistrationApprovalEmailToUser } from 'services/email';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const approveRegistration = async (req: Request, res: Response, next: NextFunction) => {
+export const approveRegistration = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   const userRepository = getRepository(User);
@@ -38,4 +39,4 @@ export const approveRegistration = async (req: Request, res: Response, next: Nex
     const customError = new CustomError(400, 'Raw', `Can't approve user.`, null, err);
     return next(customError);
   }
-};
+});

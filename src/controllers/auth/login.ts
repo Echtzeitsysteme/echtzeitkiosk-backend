@@ -6,10 +6,11 @@ import { getRepository } from 'typeorm';
 import { config } from 'config/config';
 import { User } from 'orm/entities/users/User';
 import { JwtPayload } from 'types/JwtPayload';
+import { catchAsync } from 'utils/catchAsync';
 import { createJwtToken } from 'utils/createJwtToken';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
   const userRepository = getRepository(User);
@@ -44,4 +45,4 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const customError = new CustomError(400, 'Raw', 'Error', null, err);
     return next(customError);
   }
-};
+});

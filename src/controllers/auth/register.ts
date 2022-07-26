@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
+import { config } from 'config/config';
 import { RoleType } from 'consts/RoleType';
 import { SystemState } from 'orm/entities/systemState/SystemState';
 import { User } from 'orm/entities/users/User';
@@ -9,9 +10,10 @@ import {
   sendRegistrationRequestReceivedEmailToUser,
   sendUserRegisteredEmailToSuperuser,
 } from 'services/email';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, role, username, firstName, lastName, activeTill, language, invitationCode } = req.body;
 
   const userRepository = getRepository(User);
@@ -42,7 +44,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       const newUser = new User();
       newUser.email = email;
       newUser.password = password;
-      newUser.role = role;
+      config.env !== 'development' ? (newUser.role = RoleType.STANDARD) : (newUser.role = role);
       newUser.username = username;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
@@ -68,4 +70,4 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const customError = new CustomError(400, 'Raw', 'Error', null, err);
     return next(customError);
   }
-};
+});

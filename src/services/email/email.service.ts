@@ -32,54 +32,54 @@ export const sendEmail = async (to: string, subject: string, text: string) => {
 };
 
 export const sendVerificationEmail = async (user: User) => {
-  const text = generateEmailText(EmailType.VERIFICATION_EMAIL, user);
+  const text = await generateEmailText(EmailType.VERIFICATION_EMAIL, user);
   const subject = generateEmailSubject(EmailType.VERIFICATION_EMAIL, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendRegistrationApprovalEmailToUser = async (user: User) => {
-  const text = generateEmailText(EmailType.REGISTRATION_APPROVAL_EMAIL_TO_USER, user);
+  const text = await generateEmailText(EmailType.REGISTRATION_APPROVAL_EMAIL_TO_USER, user);
   const subject = generateEmailSubject(EmailType.REGISTRATION_APPROVAL_EMAIL_TO_USER, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendRegistrationDeclinationEmailToUser = async (user: User) => {
-  const text = generateEmailText(EmailType.REGISTRATION_DECLINATION_EMAIL_TO_USER, user);
+  const text = await generateEmailText(EmailType.REGISTRATION_DECLINATION_EMAIL_TO_USER, user);
   const subject = generateEmailSubject(EmailType.REGISTRATION_DECLINATION_EMAIL_TO_USER, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendAccountDeletedEmail = async (user: User) => {
-  const text = generateEmailText(EmailType.ACCOUNT_DELETED, user);
+  const text = await generateEmailText(EmailType.ACCOUNT_DELETED, user);
   const subject = generateEmailSubject(EmailType.ACCOUNT_DELETED, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendUserRegisteredEmailToSuperuser = async (user: User) => {
-  const text = generateEmailText(EmailType.USER_REGISTERED_EMAIL_TO_SUPERUSER, user);
+  const text = await generateEmailText(EmailType.USER_REGISTERED_EMAIL_TO_SUPERUSER, user);
   const subject = generateEmailSubject(EmailType.USER_REGISTERED_EMAIL_TO_SUPERUSER, user);
   await sendEmail((await getSuperuser()).email, subject, text);
 };
 
 export const sendRegistrationRequestReceivedEmailToUser = async (user: User) => {
-  const text = generateEmailText(EmailType.REGISTRATION_REQUEST_RECEIVED_EMAIL_TO_USER, user);
+  const text = await generateEmailText(EmailType.REGISTRATION_REQUEST_RECEIVED_EMAIL_TO_USER, user);
   const subject = generateEmailSubject(EmailType.REGISTRATION_REQUEST_RECEIVED_EMAIL_TO_USER, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendResetPasswordEmail = async (user: User) => {
-  const text = generateEmailText(EmailType.RESET_PASSWORD, user);
+  const text = await generateEmailText(EmailType.RESET_PASSWORD, user);
   const subject = generateEmailSubject(EmailType.RESET_PASSWORD, user);
   await sendEmail(user.email, subject, text);
 };
 export const sendPasswordChangedEmail = async (user: User) => {
-  const text = generateEmailText(EmailType.PASSWORD_CHANGED, user);
+  const text = await generateEmailText(EmailType.PASSWORD_CHANGED, user);
   const subject = generateEmailSubject(EmailType.PASSWORD_CHANGED, user);
   await sendEmail(user.email, subject, text);
 };
 
 export const sendMonthlyInvoiceEmailToCustomer = async (user: User, customerInvoice: CustomerInvoice) => {
-  // const text = generateEmailText(EmailType.MONTHLY_INVOICE, user, customerInvoice); // TODO: implement
+  // const text = await generateEmailText(EmailType.MONTHLY_INVOICE, user, customerInvoice); // TODO: implement
   // const subject = generateEmailSubject(EmailType.MONTHLY_INVOICE, user, customerInvoice); // TODO: implement
 
   const customerInvoiceURL = `${config.deployment.backendURL}/customer-invoices/${customerInvoice.id}/generate-customer-invoice-pdf`;
