@@ -5,9 +5,10 @@ import { CustomerOrderItem } from 'orm/entities/customerOrderItems/CustomerOrder
 import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { Product } from 'orm/entities/products/Product';
 import { User } from 'orm/entities/users/User';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const create = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const customerOrderItems = req.body.customerOrderItems;
     const { id } = req.jwtPayload;
@@ -85,4 +86,4 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
     console.error(err);
     next(new CustomError(400, 'Raw', 'Error creating customer order', null, err));
   }
-};
+});

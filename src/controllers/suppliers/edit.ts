@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
 import { Supplier } from 'orm/entities/suppliers/Supplier';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const edit = async (req: Request, res: Response, next: NextFunction) => {
+export const edit = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const supplierRepository = getRepository(Supplier);
   try {
     const supplier = await supplierRepository.findOne({ where: { id: req.params.id } });
@@ -26,4 +27,4 @@ export const edit = async (req: Request, res: Response, next: NextFunction) => {
     const customError = new CustomError(400, 'Raw', 'Error', null, err);
     return next(customError);
   }
-};
+});

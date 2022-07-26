@@ -2,10 +2,12 @@ import { config } from 'config/config';
 import { EmailType } from 'consts/EmailType';
 import { User } from 'orm/entities/users/User';
 
-const generateEmailTextForGerman = (emailType: EmailType, user: User) => {
+const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
   switch (emailType) {
     case EmailType.VERIFICATION_EMAIL:
-      const verificationEmailUrl = `${config.deployment.frontendURL}/verify-email?token=${user.getVerifyEmailToken()}`;
+      const verifyEmailToken = await User.getVerifyEmailToken(user);
+
+      const verificationEmailUrl = `${config.deployment.frontendURL}/#/verify-email?token=${verifyEmailToken}`;
 
       return `Hallo Frau/Herr ${user.lastName},
 
@@ -30,8 +32,12 @@ const generateEmailTextForGerman = (emailType: EmailType, user: User) => {
       Diese E-Mail wurde automatisch erstellt, bitte antworten Sie nicht darauf.
           `;
 
+      break;
+
     case EmailType.RESET_PASSWORD:
-      const resetPasswordUrl = `${config.deployment.frontendURL}/reset-password?token=${user.getVerifyEmailToken()}`;
+      const resetPasswordToken = await User.getResetPasswordToken(user.email);
+
+      const resetPasswordUrl = `${config.deployment.frontendURL}/#/reset-password?token=${resetPasswordToken}`;
 
       return `Hallo Frau/Herr ${user.lastName},
 
@@ -230,10 +236,10 @@ const generateEmailTextForEnglish = (emailType: EmailType, user: User) => {
   }
 };
 
-export const generateEmailText = (emailType: EmailType, user: User) => {
+export const generateEmailText = async (emailType: EmailType, user: User) => {
   switch (user.language) {
     case 'de-DE':
-      return generateEmailTextForGerman(emailType, user);
+      return await generateEmailTextForGerman(emailType, user);
       break;
 
     default: //

@@ -4,9 +4,10 @@ import { getRepository } from 'typeorm';
 import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
 import { User } from 'orm/entities/users/User';
 import customerInvoiceService from 'services/customerInvoices';
+import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
-export const generateCustomerInvoicePDF = async (req: Request, res: Response, next: NextFunction) => {
+export const generateCustomerInvoicePDF = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const customerInvoiceRepository = getRepository(CustomerInvoice);
 
   try {
@@ -35,4 +36,4 @@ export const generateCustomerInvoicePDF = async (req: Request, res: Response, ne
   } catch (error) {
     next(new CustomError(500, 'General', error.message));
   }
-};
+});
