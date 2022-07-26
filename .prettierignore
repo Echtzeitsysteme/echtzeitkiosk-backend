@@ -1,2 +1,4 @@
 dist
 src/orm/migrations
+node_modules
+coverage

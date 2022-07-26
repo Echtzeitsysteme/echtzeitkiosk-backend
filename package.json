@@ -36,6 +36,7 @@
     "cron-job-manager": "^2.2.2",
     "express": "^4.17.3",
     "helmet": "^5.0.2",
+    "http-status": "^1.5.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
