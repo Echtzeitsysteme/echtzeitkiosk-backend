@@ -36,5 +36,5 @@ export class Product extends AbstractEntity {
   resalePricePerUnit: number;
 
   @OneToMany(() => CustomerOrderItem, (customerOrderItem) => customerOrderItem.product)
-  customerOrderItem: CustomerOrderItem[];
+  customerOrderItem: CustomerOrderItem[]; //! TODO  check if this is correct
 }

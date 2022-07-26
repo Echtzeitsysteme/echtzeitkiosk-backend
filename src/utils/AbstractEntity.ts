@@ -6,10 +6,10 @@ export abstract class AbstractEntity {
   @IsUUID()
   id: string;
 
-  @Column({ name: 'created_at' }) // SQL Name
+  @Column({ name: 'created_at' })
   @CreateDateColumn()
   @IsDate()
-  createdAt: Date; // TS Name --> Backend implementier object.createdAt
+  createdAt: Date;
 
   @Column({ name: 'updated_at' })
   @UpdateDateColumn()

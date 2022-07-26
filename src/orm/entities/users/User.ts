@@ -8,6 +8,7 @@ import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
 import { CustomerInvoice } from '../customerInvoices/CustomerInvoice';
 import { CustomerOrder } from '../customerOrders/CustomerOrder';
+import { Token } from '../tokens/Token';
 
 import { Language } from './types';
 
@@ -92,20 +93,26 @@ export class User extends AbstractEntity {
   @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user)
   customerInvoices: CustomerInvoice[];
 
+  @OneToMany(() => Token, (token) => token.user)
+  tokens: Token[];
+
   setLanguage(language: Language) {
     this.language = language;
   }
 
-  getVerifyEmailToken() {
-    return 'verifyEmailToken'; //! TODO implement
-  }
+  static getVerifyEmailToken = async (user: User) => {
+    const verifyEmailToken = await Token.generateVerifyEmailToken(user);
+    return verifyEmailToken;
+  };
 
-  getResetPasswordToken() {
-    return 'resetPasswordToken'; //! TODO implement
-  }
+  static getResetPasswordToken = async (email: string) => {
+    const resetPasswordToken = await Token.generateResetPasswordToken(email);
+    return resetPasswordToken;
+  };
 
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 10);
+    return this.password;
   }
 
   checkIfPasswordMatch(unencryptedPassword: string) {

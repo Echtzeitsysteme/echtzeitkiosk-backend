@@ -9,6 +9,7 @@ import { Product } from '../products/Product';
 @Entity('customer_order_items', { schema: 'public' })
 export class CustomerOrderItem extends AbstractEntity {
   @ManyToOne(() => Product, (product) => product.id, {
+    //! TODO  check if this is correct
     onDelete: 'CASCADE',
   })
   @JoinColumn([{ name: 'product_id', referencedColumnName: 'id' }])
