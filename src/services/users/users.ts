@@ -26,6 +26,8 @@ export const getUserByEmail = async (email: string): Promise<User | undefined> =
   } catch (err) {
     console.log(err);
   }
+
+  return undefined;
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
@@ -36,6 +38,8 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
   } catch (err) {
     console.log(err);
   }
+
+  return undefined;
 };
 
 export const updateUserById = async (id: string, updateBody: Partial<User>): Promise<User | undefined> => {
@@ -50,4 +54,6 @@ export const updateUserById = async (id: string, updateBody: Partial<User>): Pro
   } catch (err) {
     console.log(err);
   }
+
+  return undefined;
 };
