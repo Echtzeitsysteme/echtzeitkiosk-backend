@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db_postgres:
+  db-postgres:
     container_name: 'postgres'
     image: 'postgres:14.2-alpine'
     command: postgres -c stats_temp_directory=/tmp # https://stackoverflow.com/questions/66325175/docker-container-with-postgres-warning-could-not-open-statistics-file-pg-stat

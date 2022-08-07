@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+  echtzeitkiosk-backend:
+    build: .
+    # image: ghcr.io/echtzeitsysteme/echtzeitkiosk-backend:arm64
+    image: ghcr.io/echtzeitsysteme/echtzeitkiosk-backend:amd64
+    container_name: echtzeitkiosk-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      TZ: ${TZ}
+
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB_NAME: ${POSTGRES_DB_NAME}
+      PGTZ: ${PGTZ}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_EXPIRATION_MINUTES: ${JWT_ACCESS_EXPIRATION_MINUTES}
+      JWT_RESET_PASSWORD_EXPIRATION_MINUTES: ${JWT_RESET_PASSWORD_EXPIRATION_MINUTES}
+      JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: ${JWT_VERIFY_EMAIL_EXPIRATION_MINUTES}
+
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+
+      BACKEND_URL: ${BACKEND_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      PROJECT_NAME: ${PROJECT_NAME}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+
+      SUPERUSER_EMAIL: ${SUPERUSER_EMAIL}
+      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD}
+      INVITATION_CODE: ${INVITATION_CODE}
+
+      MONTHLY_INVOICE_CRON_JOB_STRING: ${MONTHLY_INVOICE_CRON_JOB_STRING}
+
+    expose:
+      - ${PORT}
+    networks:
+      - proxy
+      - default
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      # routers
+      - 'traefik.http.routers.echtzeitkiosk-backend-secure.entrypoints=websecure'
+      - 'traefik.http.routers.echtzeitkiosk-backend-secure.rule=Host(`api.echtzeitkiosk.mertalpulus.eu`)'
+      - 'traefik.http.routers.echtzeitkiosk-backend-secure.service=echtzeitkiosk-backend'
+      # services
+      - 'traefik.http.services.echtzeitkiosk-backend.loadbalancer.server.port=${PORT}'
+
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 256M
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '512m'
+
+  postgres:
+    container_name: 'postgres'
+    image: 'postgres:14.2-alpine'
+    command: postgres -c stats_temp_directory=/tmp
+    restart: unless-stopped
+    networks:
+      - proxy
+      - default
+    expose:
+      - '5432'
+    volumes:
+      - ./database/postgres:/var/lib/postgresql/data/
+    labels:
+      - 'traefik.enable=true'
+      # routers
+      - 'traefik.tcp.routers.postgres.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.postgres.entryPoints=postgres'
+      - 'traefik.tcp.routers.postgres.service=postgres'
+      # services (needed for TCP)
+      - 'traefik.tcp.services.postgres.loadbalancer.server.port=5432'
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 256M
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '512m'
+
+  postgres-adminer:
+    container_name: 'adminer'
+    depends_on:
+      - postgres
+    image: adminer
+    networks:
+      - proxy
+      - default
+    restart: unless-stopped
+    expose:
+      - '8080'
+
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 256M
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '512m'
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      # routers
+      - 'traefik.http.routers.adminer-secure.entrypoints=websecure'
+      - 'traefik.http.routers.adminer-secure.rule=Host(`adminer.mertalpulus.eu`)'
+      - 'traefik.http.routers.adminer-secure.service=adminer'
+      # services
+      - 'traefik.http.services.adminer.loadbalancer.server.port=8080'
+
+networks:
+  proxy:
+    external: true
