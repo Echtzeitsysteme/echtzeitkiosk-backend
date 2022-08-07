@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    ports:
+      - 80:80
+      - 443:443
+      - 5432:5432
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik-data/traefik.yml:/traefik.yml:ro
+      - ./traefik-data/acme.json:/acme.json
+      - ./traefik-data/configurations:/configurations
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      # routers
+      - 'traefik.http.routers.traefik-secure.entrypoints=websecure'
+      - 'traefik.http.routers.traefik-secure.rule=Host(`traefik.mertalpulus.eu`)'
+      - 'traefik.http.routers.traefik-secure.middlewares=user-auth@file'
+      - 'traefik.http.routers.traefik-secure.service=api@internal'
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      # routers
+      - 'traefik.http.routers.portainer-secure.entrypoints=websecure'
+      - 'traefik.http.routers.portainer-secure.rule=Host(`portainer.mertalpulus.eu`)'
+      - 'traefik.http.routers.portainer-secure.service=portainer'
+      # services
+      - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    environment:
+      WATCHTOWER_POLL_INTERVAL: 86400 # seconds (24 hours)
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    stdin_open: true
+    tty: true
+
+networks:
+  proxy:
+    external: true
