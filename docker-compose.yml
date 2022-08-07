@@ -102,7 +102,7 @@ services:
       options:
         max-size: '512m'
 
-  postgres-adminer:
+  adminer:
     container_name: 'adminer'
     depends_on:
       - postgres
