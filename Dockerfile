@@ -15,4 +15,4 @@ RUN yarn install
 # Bundle app source
 COPY . .
 
-CMD [ "node", "--trace-warnings","src/index.js" ]
+CMD [ "node", "--trace-warnings","src/index.ts" ]
