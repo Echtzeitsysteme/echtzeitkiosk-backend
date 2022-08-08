@@ -19,7 +19,18 @@ import { dbCreateConnection } from './orm/dbCreateConnection';
 import routes from './routes';
 
 export const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      'http://echtzeitkiosk.mertalpulus.eu',
+      'https://echtzeitkiosk.mertalpulus.eu',
+
+      'http://localhost:3000',
+      'https://localhost:3000',
+    ],
+    credentials: true,
+  }),
+);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
