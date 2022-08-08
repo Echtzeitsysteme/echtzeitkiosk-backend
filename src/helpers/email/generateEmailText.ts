@@ -238,13 +238,17 @@ const generateEmailTextForEnglish = (emailType: EmailType, user: User) => {
 
 export const generateEmailText = async (emailType: EmailType, user: User) => {
   switch (user.language) {
-    case 'de-DE':
-      return await generateEmailTextForGerman(emailType, user);
-      break;
+    // case 'de-DE':
+    //   return await generateEmailTextForGerman(emailType, user);
+    //   break;
 
-    default: //
-      //'en-US'
-      return generateEmailTextForEnglish(emailType, user);
+    // default: //
+    //   //'en-US'
+    //   return generateEmailTextForEnglish(emailType, user);
+    //   break;
+
+    default:
+      return await generateEmailTextForGerman(emailType, user);
       break;
   }
 };
