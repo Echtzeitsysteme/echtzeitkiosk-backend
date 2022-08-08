@@ -1,5 +1,5 @@
-import 'dotenv/config';
 import 'reflect-metadata';
+
 import fs from 'fs';
 import path from 'path';
 
