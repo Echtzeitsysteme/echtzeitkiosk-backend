@@ -33,6 +33,7 @@ const generateEmailSubjectForGerman = (emailType: EmailType) => {
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const generateEmailSubjectForEnglish = (emailType: EmailType) => {
   switch (emailType) {
     case EmailType.VERIFICATION_EMAIL:
@@ -66,13 +67,17 @@ const generateEmailSubjectForEnglish = (emailType: EmailType) => {
 
 export const generateEmailSubject = (emailType: EmailType, user: User) => {
   switch (user.language) {
-    case 'de-DE':
-      return generateEmailSubjectForGerman(emailType);
-      break;
+    // case 'de-DE':
+    //   return generateEmailSubjectForGerman(emailType);
+    //   break;
 
-    default: //
-      //'en-US'
-      return generateEmailSubjectForEnglish(emailType);
+    // default: //
+    //   //'en-US'
+    //   return generateEmailSubjectForEnglish(emailType);
+    //   break;
+
+    default:
+      return generateEmailSubjectForGerman(emailType);
       break;
   }
 };
