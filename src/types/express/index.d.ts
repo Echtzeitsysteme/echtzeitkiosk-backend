@@ -1,5 +1,4 @@
-import { Language } from 'orm/entities/users/types';
-
+import { Language } from '../../consts/Language';
 import { JwtPayload } from '../JwtPayload';
 
 declare global {

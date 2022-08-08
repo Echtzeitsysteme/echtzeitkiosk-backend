@@ -3,9 +3,13 @@ version: '3.8'
 services:
   echtzeitkiosk-backend:
     build: .
-    # image: ghcr.io/echtzeitsysteme/echtzeitkiosk-backend:arm64
+    image: ghcr.io/echtzeitsysteme/echtzeitkiosk-backend:arm64
     # image: ghcr.io/echtzeitsysteme/echtzeitkiosk-backend:amd64
     container_name: echtzeitkiosk-backend
+    depends_on:
+      - postgresdb
+    links:
+      - postgresdb
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV}
@@ -57,7 +61,8 @@ services:
       - 'traefik.http.routers.echtzeitkiosk-backend-secure.service=echtzeitkiosk-backend'
       # services
       - 'traefik.http.services.echtzeitkiosk-backend.loadbalancer.server.port=${PORT}'
-
+    volumes:
+      - ./log/:/usr/src/app/log
     deploy:
       resources:
         limits:
@@ -70,8 +75,8 @@ services:
       options:
         max-size: '512m'
 
-  postgres:
-    container_name: 'postgres'
+  postgresdb:
+    container_name: 'postgresdb'
     image: 'postgres:14.2-alpine'
     command: postgres -c stats_temp_directory=/tmp
     restart: unless-stopped
@@ -79,7 +84,9 @@ services:
       - proxy
       - default
     expose:
-      - '5432'
+      - 5432
+    ports:
+      - 5432:5432
     volumes:
       - ./database/postgres:/var/lib/postgresql/data/
     env_file:
@@ -107,7 +114,9 @@ services:
   adminer:
     container_name: 'adminer'
     depends_on:
-      - postgres
+      - postgresdb
+    links:
+      - postgresdb
     image: adminer
     networks:
       - proxy
@@ -115,7 +124,8 @@ services:
     restart: unless-stopped
     expose:
       - '8080'
-
+    # ports:
+    #   - 8080:8080
     deploy:
       resources:
         limits:

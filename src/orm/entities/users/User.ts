@@ -6,11 +6,10 @@ import { RoleType } from 'consts/RoleType';
 import { AbstractEntity } from 'utils/AbstractEntity';
 import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
+import { Language } from '../../../consts/Language';
 import { CustomerInvoice } from '../customerInvoices/CustomerInvoice';
 import { CustomerOrder } from '../customerOrders/CustomerOrder';
 import { Token } from '../tokens/Token';
-
-import { Language } from './types';
 
 @Entity('users')
 export class User extends AbstractEntity {
