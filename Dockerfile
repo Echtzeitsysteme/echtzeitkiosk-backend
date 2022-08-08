@@ -1,3 +1,19 @@
+FROM node as builder
+
+ENV TZ Etc/Universal
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn build
+
 FROM node:lts-alpine
 
 #set timezone
@@ -8,11 +24,11 @@ RUN apk update && apk add tzdata
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package*.json ./
-COPY yarn.lock ./
-RUN yarn install
+COPY package.json yarn.lock ./
 
-# Bundle app source
-COPY . .
+RUN yarn install --production --frozen-lockfile
 
-CMD [ "node", "--trace-warnings","src/index.ts" ]
+COPY --from=builder /usr/src/app/dist ./dist
+
+EXPOSE 4000
+CMD [ "node", "--trace-warnings","dist/index.js" ]

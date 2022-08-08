@@ -1,6 +1,7 @@
 {
   "name": "echtzeitkiosk-backend",
   "version": "0.0.1",
+  "main": "index.ts",
   "scripts": {
     "dev": "debug=* NODE_PATH=./src ts-node-dev --transpile-only --respawn ./src/index.ts",
     "dev:debug": "debug=* NODE_PATH=./src ts-node-dev --transpile-only --respawn --inspect=4001 ./src/index.ts",
