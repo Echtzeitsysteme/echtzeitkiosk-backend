@@ -65,7 +65,6 @@ export class Token extends AbstractEntity {
     let payload;
     try {
       payload = jwt.verify(tokenValue, secret);
-      console.log(payload);
     } catch (error) {
       throw new CustomError(httpStatus.UNAUTHORIZED, 'General', 'Token could not be verified');
     }

@@ -7,6 +7,7 @@ import { getRepository } from 'typeorm';
 import { TokenType } from 'consts/TokenType';
 import { Token } from 'orm/entities/tokens/Token';
 import { User } from 'orm/entities/users/User';
+import { sendPasswordChangedEmail } from 'services/email';
 import { getUserById } from 'services/users';
 import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
@@ -56,6 +57,8 @@ export const resetPassword = catchAsync(async (req: Request, res: Response) => {
 
   // delete token
   await tokenRepository.remove(verifiedEmailTokenRecord);
+
+  sendPasswordChangedEmail(user);
 
   return res.customSuccess(200, 'Password reset. You can now login with your new password', null);
 });
