@@ -85,20 +85,20 @@ services:
       - default
     expose:
       - 5432
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     volumes:
-      - ./database/postgres:/var/lib/postgresql/data/
+      - ./database/postgresdb:/var/lib/postgresql/data/
     env_file:
       - .env
     labels:
       - 'traefik.enable=true'
       # routers
-      - 'traefik.tcp.routers.postgres.rule=HostSNI(`*`)'
-      - 'traefik.tcp.routers.postgres.entryPoints=postgres'
-      - 'traefik.tcp.routers.postgres.service=postgres'
+      - 'traefik.tcp.routers.postgresdb.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.postgresdb.entryPoints=postgresdb'
+      - 'traefik.tcp.routers.postgresdb.service=postgresdb'
       # services (needed for TCP)
-      - 'traefik.tcp.services.postgres.loadbalancer.server.port=5432'
+      - 'traefik.tcp.services.postgresdb.loadbalancer.server.port=5432'
     deploy:
       resources:
         limits:
