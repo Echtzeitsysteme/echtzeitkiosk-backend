@@ -27,6 +27,13 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
       return next(customError);
     }
 
+    if (!user.isApproved) {
+      const customError = new CustomError(404, 'General', 'Not Found', [
+        'Your account is not approved yet! Please wait for admin approval.',
+      ]);
+      return next(customError);
+    }
+
     const jwtPayload: JwtPayload = {
       id: user.id,
       role: user.role,

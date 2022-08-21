@@ -8,6 +8,7 @@ import { ErrorValidation } from 'utils/response/custom-error/types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const validatorEdit = async (req: Request, res: Response, next: NextFunction) => {
   let { username, name } = req.body;
+
   const errorsValidation: ErrorValidation[] = [];
   const userRepository = getRepository(User);
 
