@@ -27,6 +27,9 @@ app.use(
 
       'http://localhost:3000',
       'https://localhost:3000',
+
+      'http://kiosk.fg.es.e-technik.tu-darmstadt.de',
+      'https://kiosk.fg.es.e-technik.tu-darmstadt.de',
     ],
     credentials: true,
   }),
