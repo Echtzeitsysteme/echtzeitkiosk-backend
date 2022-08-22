@@ -1,5 +1,5 @@
-export enum ProductCategory {
-  FOOD,
-  DRINK,
-  ICECREAM,
-}
+// export enum ProductCategory {
+//   FOOD,
+//   DRINK,
+//   ICECREAM,
+// }

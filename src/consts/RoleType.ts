@@ -2,5 +2,5 @@
 export enum RoleType {
   SUPERUSER = 'SUPERUSER',
   STANDARD = 'STANDARD',
-  GUEST = 'GUEST',
+  // GUEST = 'GUEST',
 }

@@ -14,7 +14,17 @@ import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
 export const register = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, role, username, firstName, lastName, activeTill, language, invitationCode } = req.body;
+  const {
+    email,
+    password,
+    role,
+    username,
+    firstName,
+    lastName,
+    //  activeTill,
+    language,
+    invitationCode,
+  } = req.body;
 
   const userRepository = getRepository(User);
   const systemStateRepository = getRepository(SystemState);
@@ -48,7 +58,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
       newUser.username = username;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
-      if (role === RoleType.GUEST) newUser.activeTill = activeTill;
+      // if (role === RoleType.GUEST) newUser.activeTill = activeTill;
       newUser.language = language;
 
       newUser.hashPassword();
