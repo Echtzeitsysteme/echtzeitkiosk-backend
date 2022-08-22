@@ -18,7 +18,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response, nex
       return next(customError);
     }
 
-    sendResetPasswordEmail(user);
+    await sendResetPasswordEmail(user);
   } catch (err) {
     const customError = new CustomError(400, 'Raw', 'Error', null, err);
     return next(customError);

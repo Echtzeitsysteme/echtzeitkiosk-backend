@@ -1,7 +1,7 @@
-export enum ProductType {
-  EIS,
-  BIER_33CL,
-  BIER_50CL,
-  COLA_33CL,
-  FANTA_33CL,
-}
+// export enum ProductType {
+//   EIS,
+//   BIER_33CL,
+//   BIER_50CL,
+//   COLA_33CL,
+//   FANTA_33CL,
+// }

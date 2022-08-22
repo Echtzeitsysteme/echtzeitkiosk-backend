@@ -67,7 +67,8 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
 
         Sie haben vor kurzem erfolgreich Ihr ${config.deployment.projectName}-Kontopasswort geändert.
         Wenn Sie diese Anfrage nicht gestellt haben,
-        setzen Sie bitte das Passwort Ihres ${config.deployment.projectName}-Kontos zurück. Falls Sie das Passwort nicht zurücksetzen können, kontaktieren Sie uns bitte per E-Mail: ${config.email.supportEmail} 
+        setzen Sie bitte das Passwort Ihres ${config.deployment.projectName}-Kontos zurück. Falls Sie das Passwort nicht zurücksetzen können,
+        kontaktieren Sie uns bitte per E-Mail: ${config.email.supportEmail}
         
         Wichtiger Hinweis: Wir werden Sie nie dazu auffordern, persönliche Daten per E-Mail zu versenden oder über einen Link zu aktualisieren.
         Bitte reagieren Sie nicht auf solche E-Mails,

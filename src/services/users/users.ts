@@ -9,10 +9,10 @@ export const deleteUser = async (user: User): Promise<void> => {
   const userRepository = getRepository(User);
 
   try {
+    console.log(`User with id ${user.id} successfully deleted.`);
     await userRepository.remove(user);
 
     sendAccountDeletedEmail(user);
-    console.log(`User with id ${user.id} successfully deleted.`);
   } catch (err) {
     console.log(err);
   }

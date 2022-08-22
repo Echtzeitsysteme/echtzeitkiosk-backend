@@ -1,7 +1,7 @@
 import { IsUrl } from 'class-validator';
 import { Entity, Column, OneToMany } from 'typeorm';
 
-import { ProductCategory, ProductType } from 'consts';
+// import { ProductCategory, ProductType } from 'consts';
 import { AbstractEntity } from 'utils/AbstractEntity';
 import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
@@ -12,11 +12,12 @@ export class Product extends AbstractEntity {
   @Column({ unique: true })
   productTitle: string;
 
-  @Column({ unique: true, type: 'enum', enum: ProductType })
-  productType: ProductType;
+  // TODO do not use these two
+  // @Column({ unique: true, type: 'enum', enum: ProductType })
+  // productType: ProductType;
 
-  @Column({ type: 'enum', enum: ProductCategory })
-  productCategory: ProductCategory;
+  // @Column({ type: 'enum', enum: ProductCategory })
+  // productCategory: ProductCategory;
 
   @Column({ type: 'smallint', name: 'quantity', default: 0 })
   quantity: number;

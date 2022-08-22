@@ -67,6 +67,4 @@ app.listen(port, () => {
   console.log(`Current Date Time: ${new Date()}`);
   MonthlyInvoiceCronJobManager.startAllJobs();
   console.log('MonthlyInvoiceCronJobManager:', MonthlyInvoiceCronJobManager.getAllJobs());
-
-  //print current date time
 })();
