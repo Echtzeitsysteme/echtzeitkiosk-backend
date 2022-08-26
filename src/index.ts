@@ -19,6 +19,7 @@ import { dbCreateConnection } from './orm/dbCreateConnection';
 import routes from './routes';
 
 export const app = express();
+
 app.use(
   cors({
     origin: [
@@ -28,12 +29,16 @@ app.use(
       'http://localhost:3000',
       'https://localhost:3000',
 
+      'http://192.168.1.111:3000',
+      'https://192.168.1.111:3000',
+
       'http://kiosk.fg.es.e-technik.tu-darmstadt.de',
       'https://kiosk.fg.es.e-technik.tu-darmstadt.de',
     ],
     credentials: true,
   }),
 );
+
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
