@@ -12,7 +12,7 @@ export class CustomerOrder extends AbstractEntity {
   [x: string]: any; // for monthly_customer_invoice_id
 
   @Column({
-    precision: 5,
+    precision: 10,
     scale: 2,
     nullable: true,
     type: 'numeric',
