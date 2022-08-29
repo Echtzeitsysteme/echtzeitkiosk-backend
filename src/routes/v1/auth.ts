@@ -27,9 +27,6 @@ router.post('/reset-password', [], resetPassword); // TODO
 router.post('/verify-email', [], verifyEmail);
 router.post('/send-verification-email', [], sendVerificationEmail); // send verification email again
 
-//! TODO - implement these
-// logout?
-
 router.post('/register/approve-registration/:id', [checkJwt, checkRole([RoleType.SUPERUSER])], approveRegistration);
 router.post('/register/decline-registration/:id', [checkJwt, checkRole([RoleType.SUPERUSER])], declineRegistration);
 

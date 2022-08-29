@@ -73,13 +73,13 @@ export class User extends AbstractEntity {
   @IsDate()
   lastLogin: Date | null;
 
-  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
+  @Column({ type: 'numeric', precision: 10, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
   balance: number;
 
   @Column({
     type: 'numeric',
     name: 'total_spent',
-    precision: 5,
+    precision: 10,
     scale: 2,
     default: 0,
     transformer: new ColumnNumericTransformer(),

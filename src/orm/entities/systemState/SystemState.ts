@@ -6,10 +6,10 @@ import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
 @Entity('system_state', { schema: 'public' })
 export class SystemState extends AbstractEntity {
-  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
+  @Column({ type: 'numeric', precision: 10, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
   currentBalance: number;
 
-  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
+  @Column({ type: 'numeric', precision: 10, scale: 2, default: 0, transformer: new ColumnNumericTransformer() })
   previousBalance: number;
 
   @Column({

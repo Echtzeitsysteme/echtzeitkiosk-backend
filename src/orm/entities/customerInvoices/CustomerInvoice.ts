@@ -11,7 +11,7 @@ import { User } from '../users/User';
 export class CustomerInvoice extends AbstractEntity {
   @Column({
     type: 'numeric',
-    precision: 5,
+    precision: 10,
     scale: 2,
     nullable: true,
     name: 'total',
@@ -21,7 +21,7 @@ export class CustomerInvoice extends AbstractEntity {
 
   @Column({
     type: 'numeric',
-    precision: 5,
+    precision: 10,
     scale: 2,
     nullable: true,
     name: 'current_user_balance',

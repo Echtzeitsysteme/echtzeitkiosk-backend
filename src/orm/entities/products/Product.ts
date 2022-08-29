@@ -29,7 +29,7 @@ export class Product extends AbstractEntity {
   @Column({
     name: 'resale_price_per_unit',
     type: 'numeric',
-    precision: 5,
+    precision: 10,
     scale: 2,
     default: 0,
     transformer: new ColumnNumericTransformer(),

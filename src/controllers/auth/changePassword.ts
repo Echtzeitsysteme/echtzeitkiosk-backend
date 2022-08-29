@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
 import { User } from 'orm/entities/users/User';
+import { sendPasswordChangedEmail } from 'services/email';
 import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
@@ -26,6 +27,8 @@ export const changePassword = catchAsync(async (req: Request, res: Response, nex
     user.password = passwordNew;
     user.hashPassword();
     userRepository.save(user);
+
+    sendPasswordChangedEmail(user);
 
     res.customSuccess(200, 'Password successfully changed.');
   } catch (err) {
