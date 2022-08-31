@@ -21,7 +21,6 @@ export const list = catchAsync(async (req: Request, res: Response, next: NextFun
         'isApproved',
         'isEmailVerified',
         'isFirstTimeLogin',
-        'activeTill',
         'balance',
         'firstName',
         'lastName',

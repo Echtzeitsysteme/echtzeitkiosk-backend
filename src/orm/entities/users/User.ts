@@ -54,16 +54,6 @@ export class User extends AbstractEntity {
   isApproved: boolean;
 
   @Column({
-    name: 'is_active',
-    default: true,
-  })
-  isActive: boolean;
-
-  @Column({ name: 'active_till', nullable: true })
-  @IsDate()
-  activeTill: Date | null;
-
-  @Column({
     default: 'de-DE' as Language,
     length: 15,
   })
