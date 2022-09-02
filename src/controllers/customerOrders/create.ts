@@ -5,6 +5,7 @@ import { CustomerOrderItem } from 'orm/entities/customerOrderItems/CustomerOrder
 import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { Product } from 'orm/entities/products/Product';
 import { User } from 'orm/entities/users/User';
+import { sendEmailNotfForOrder } from 'services/email/email.service';
 import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
@@ -63,6 +64,7 @@ export const create = catchAsync(async (req: Request, res: Response, next: NextF
 
       customerOrder.total += customerOrderItemEntity.subtotal;
       customerOrderItemEntity.customerOrder = customerOrder;
+      await customerOrderRepository.save(customerOrder);
 
       await customerOrderItemRepository.save(customerOrderItemEntity);
 
@@ -76,10 +78,15 @@ export const create = catchAsync(async (req: Request, res: Response, next: NextF
     user.balance -= customerOrder.total;
     user.balance = Math.round(user.balance * 100) / 100;
 
+    user.totalSpent += customerOrder.total;
+    user.totalSpent = Math.round(user.totalSpent * 100) / 100;
+
     await userRepository.save(user);
 
     delete customerOrder.user;
     delete customerOrder.customerInvoice;
+
+    if (user.isEmailNotfForOrderEnabled) sendEmailNotfForOrder(user, customerOrder);
 
     res.customSuccess(200, 'Customer order successfully saved.', { ...customerOrder, balanceAfterOrder: user.balance });
   } catch (err) {

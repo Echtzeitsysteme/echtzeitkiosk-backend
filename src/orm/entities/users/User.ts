@@ -54,6 +54,12 @@ export class User extends AbstractEntity {
   isApproved: boolean;
 
   @Column({
+    name: 'is_email_notf_for_order_enabled',
+    default: false,
+  })
+  isEmailNotfForOrderEnabled: boolean;
+
+  @Column({
     default: 'de-DE' as Language,
     length: 15,
   })

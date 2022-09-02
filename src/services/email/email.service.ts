@@ -1,11 +1,14 @@
 import Joi from 'joi';
 import nodemailer from 'nodemailer';
+import { getRepository } from 'typeorm';
 
 import { config } from 'config/config';
 import { EmailType } from 'consts/EmailType';
 import { generateEmailText, generateEmailSubject } from 'helpers/email';
 import { getSuperuser } from 'helpers/users/superuserHelpers';
 import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
+import { CustomerOrderItem } from 'orm/entities/customerOrderItems/CustomerOrderItem';
+import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { User } from 'orm/entities/users/User';
 
 export const sendEmail = async (to: string, subject: string, text: string) => {
@@ -87,6 +90,52 @@ export const sendMonthlyInvoiceEmailToCustomer = async (user: User, customerInvo
 
   const subject = `Echtzeitkiosk Invoice For ${customerInvoiceMonthYear}`;
   const text = `${customerInvoiceURL}`;
+
+  await sendEmail(user.email, subject, text);
+};
+
+export const sendEmailNotfForOrder = async (user: User, customerOrder: CustomerOrder) => {
+  const customerOrderRepository = getRepository(CustomerOrder);
+
+  const customerOrderWithCustomerOrderItems = await customerOrderRepository.findOne(customerOrder.id, {
+    relations: ['customerOrderItems'],
+  });
+
+  const customerOrderItems = customerOrderWithCustomerOrderItems.customerOrderItems;
+
+  const renderCustomerOrderItems = async (customerOrderItems: CustomerOrderItem[], text) => {
+    const customerOrderItemRepository = getRepository(CustomerOrderItem);
+
+    for await (const customerOrderItem of customerOrderItems) {
+      const customerOrderItemWithProductInfo = await customerOrderItemRepository.findOne(customerOrderItem.id, {
+        relations: ['product'],
+      });
+
+      text += `${customerOrderItemWithProductInfo.product.productTitle} :  ${customerOrderItem.quantity} x ${customerOrderItemWithProductInfo.product.resalePricePerUnit}€\n`;
+    }
+
+    return text;
+  };
+
+  const subject = `Echtzeitkiosk Order Notification for ${new Date().toLocaleString('de-DE', {
+    timeZone: 'Europe/Berlin',
+  })}`;
+
+  const textDraft = `Order ID: ${customerOrder.id}
+
+Order Date: ${customerOrder.createdAt.toLocaleString('de-DE', {
+    timeZone: 'Europe/Berlin',
+  })}
+
+Customer Invoice ID: ${customerOrder.customerInvoice || 'Not yet assigned'}
+
+Your current balance: ${user.balance}
+
+Your total spending: ${user.totalSpent}
+
+You bought the following products:\n`;
+
+  const text = await renderCustomerOrderItems(customerOrderItems, textDraft);
 
   await sendEmail(user.email, subject, text);
 };
