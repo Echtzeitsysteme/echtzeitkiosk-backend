@@ -12,13 +12,6 @@ export class Product extends AbstractEntity {
   @Column({ unique: true })
   productTitle: string;
 
-  // TODO do not use these two
-  // @Column({ unique: true, type: 'enum', enum: ProductType })
-  // productType: ProductType;
-
-  // @Column({ type: 'enum', enum: ProductCategory })
-  // productCategory: ProductCategory;
-
   @Column({ type: 'smallint', name: 'quantity', default: 0 })
   quantity: number;
 
@@ -37,5 +30,5 @@ export class Product extends AbstractEntity {
   resalePricePerUnit: number;
 
   @OneToMany(() => CustomerOrderItem, (customerOrderItem) => customerOrderItem.product)
-  customerOrderItem: CustomerOrderItem[]; //! TODO  check if this is correct
+  customerOrderItem: CustomerOrderItem[];
 }

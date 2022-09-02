@@ -7,7 +7,7 @@ import { CustomError } from 'utils/response/custom-error/CustomError';
 
 export const edit = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id;
-  const { username, balance } = req.body;
+  const { username, balance, isEmailNotfForOrderEnabled } = req.body;
 
   const userRepository = getRepository(User);
   try {
@@ -18,16 +18,13 @@ export const edit = catchAsync(async (req: Request, res: Response, next: NextFun
       return next(customError);
     }
 
-    // user.username = username;
-    // user.name = name;
-    //! TODO implement other fields
+    if (isEmailNotfForOrderEnabled)
+      user.isEmailNotfForOrderEnabled = isEmailNotfForOrderEnabled === 'true' ? true : false;
 
-    // find the changed fields and update them
     if (username) user.username = username;
-    if (balance) {
-      console.log('balance', balance);
-      user.balance = balance;
-    }
+    if (balance) user.balance = balance;
+
+    console.log(user);
 
     try {
       await userRepository.save(user);

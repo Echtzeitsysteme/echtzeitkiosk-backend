@@ -58,6 +58,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
       newUser.username = username;
       newUser.firstName = firstName;
       newUser.lastName = lastName;
+      newUser.isEmailNotfForOrderEnabled = false;
       // if (role === RoleType.GUEST) newUser.activeTill = activeTill;
       newUser.language = language;
 
