@@ -21,12 +21,12 @@ export const list = catchAsync(async (req: Request, res: Response, next: NextFun
         'isApproved',
         'isEmailVerified',
         'isFirstTimeLogin',
-        'activeTill',
         'balance',
         'firstName',
         'lastName',
+        'isEmailNotfForOrderEnabled',
       ],
-      relations: ['customerOrders'],
+      relations: ['customerOrders'], // TODO required?
     });
 
     res.customSuccess(200, 'List of users.', users);

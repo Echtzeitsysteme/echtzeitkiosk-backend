@@ -17,6 +17,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { getLanguage } from './middleware/getLanguage';
 import { dbCreateConnection } from './orm/dbCreateConnection';
 import routes from './routes';
+import { morganErrorHandler, morganSuccessHandler } from './utils/customMorgan';
 
 export const app = express();
 
@@ -49,6 +50,8 @@ try {
     flags: 'a',
   });
   app.use(morgan('combined', { stream: accessLogStream }));
+  app.use(morganErrorHandler);
+  app.use(morganSuccessHandler);
 } catch (err) {
   console.log(err);
 }

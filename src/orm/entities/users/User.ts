@@ -20,9 +20,7 @@ export class User extends AbstractEntity {
   @IsEmail()
   email: string;
 
-  // @Exclude()
   @Column({ nullable: true })
-  // @Column({ select: false })
   password: string;
 
   @Column({ unique: true })
@@ -54,14 +52,10 @@ export class User extends AbstractEntity {
   isApproved: boolean;
 
   @Column({
-    name: 'is_active',
-    default: true,
+    name: 'is_email_notf_for_order_enabled',
+    default: false,
   })
-  isActive: boolean;
-
-  @Column({ name: 'active_till', nullable: true })
-  @IsDate()
-  activeTill: Date | null;
+  isEmailNotfForOrderEnabled: boolean;
 
   @Column({
     default: 'de-DE' as Language,

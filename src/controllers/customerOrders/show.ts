@@ -9,4 +9,5 @@ import { catchAsync } from 'utils/catchAsync';
 export const show = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   console.log('customerOrders/show');
   console.log(req, res, next);
+  // TODO
 });

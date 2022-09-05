@@ -1,16 +1,15 @@
 import { Router } from 'express';
 
-// import { RoleType } from 'consts/RoleType';
+import { RoleType } from 'consts';
 import {
-  //  list, show, edit, destroy
+  //  show, edit, destroy
   generateCustomerInvoicePDF,
+  list,
 } from 'controllers/customerInvoices';
-// import { checkJwt } from 'middleware/checkJwt';
-// import { checkRole } from 'middleware/checkRole';
+import { checkJwt } from 'middleware/checkJwt';
+import { checkRole } from 'middleware/checkRole';
 
 const router = Router();
-
-// router.get('/', [checkJwt, checkRole([RoleType.SUPERUSER])], list);
 
 // router.get('/:id', [checkJwt, checkRole([RoleType.SUPERUSER], true)], show);
 
@@ -23,5 +22,7 @@ router.get(
   // [checkJwt, checkRole([RoleType.STANDARD])], // TODO: implement this after implementing the frontendURL in the customerInvoice email
   generateCustomerInvoicePDF,
 );
+
+router.get('/', [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])], list);
 
 export default router;

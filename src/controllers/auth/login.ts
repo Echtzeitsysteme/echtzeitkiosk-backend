@@ -28,8 +28,15 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     }
 
     if (!user.isApproved) {
-      const customError = new CustomError(404, 'General', 'Not Found', [
-        'Your account is not approved yet! Please wait for admin approval.',
+      const customError = new CustomError(400, 'General', 'Bad Request', [
+        'Registration is not approved. Please wait for admin approval',
+      ]);
+      return next(customError);
+    }
+
+    if (!user.isEmailVerified) {
+      const customError = new CustomError(404, 'General', 'Bad Request', [
+        'Email is not verified. Please verify your email',
       ]);
       return next(customError);
     }
@@ -43,6 +50,11 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
 
     try {
       const token = createJwtToken(jwtPayload);
+
+      user.lastLogin = new Date();
+
+      await userRepository.save(user);
+
       res.customSuccess(200, 'Token successfully created.', `Bearer ${token}`);
     } catch (err) {
       const customError = new CustomError(400, 'Raw', "Token can't be created", null, err);

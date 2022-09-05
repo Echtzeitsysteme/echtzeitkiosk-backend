@@ -50,6 +50,7 @@
     "typeorm": "^0.2.45",
     "typeorm-naming-strategies": "^4.0.0",
     "validator": "^13.7.0",
+    "winston": "^3.8.1",
     "zod": "^3.16.0"
   },
   "devDependencies": {

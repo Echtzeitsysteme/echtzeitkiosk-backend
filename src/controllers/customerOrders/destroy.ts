@@ -9,4 +9,5 @@ import { catchAsync } from 'utils/catchAsync';
 export const destroy = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   console.log('customerOrders/destroy');
   console.log(req, res, next);
+  // TODO
 });
