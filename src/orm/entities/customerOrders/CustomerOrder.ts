@@ -24,7 +24,7 @@ export class CustomerOrder extends AbstractEntity {
   customerOrderItems: CustomerOrderItem[];
 
   @ManyToOne(() => User, (user) => user.customerOrders, {
-    // onDelete: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User = new User();

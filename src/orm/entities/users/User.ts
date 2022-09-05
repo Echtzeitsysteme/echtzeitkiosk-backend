@@ -20,9 +20,7 @@ export class User extends AbstractEntity {
   @IsEmail()
   email: string;
 
-  // @Exclude()
   @Column({ nullable: true })
-  // @Column({ select: false })
   password: string;
 
   @Column({ unique: true })

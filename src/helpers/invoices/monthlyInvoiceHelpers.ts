@@ -18,42 +18,44 @@ export const generateMonthlyInvoices = async () => {
   const users = await userRepository.find();
 
   for await (const user of users) {
-    const customerInvoice = await customerInvoiceRepository.findOne({
+    // const customerInvoice = await customerInvoiceRepository.findOne({
+    //   where: {
+    //     user: user,
+    //     customerInvoiceType: CustomerInvoiceType.MONTHLY,
+    //     customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
+    //   },
+    // });
+
+    // if (!customerInvoice) {
+    if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
+
+    const newCustomerInvoice = new CustomerInvoice();
+    newCustomerInvoice.user = user;
+    newCustomerInvoice.customerInvoiceType = CustomerInvoiceType.MONTHLY;
+    newCustomerInvoice.customerInvoiceMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
+    newCustomerInvoice.total = 0;
+    newCustomerInvoice.currentUserBalance = user.balance;
+
+    await customerInvoiceRepository.save(newCustomerInvoice);
+
+    console.log(`Created new customer invoice for user ${user.id}`, newCustomerInvoice);
+
+    const customerOrders = await customerOrderRepository.find({
       where: {
         user: user,
-        customerInvoiceType: CustomerInvoiceType.MONTHLY,
-        // customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
       },
     });
 
-    if (!customerInvoice) {
-      if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
-
-      const newCustomerInvoice = new CustomerInvoice();
-      newCustomerInvoice.user = user;
-      newCustomerInvoice.customerInvoiceType = CustomerInvoiceType.MONTHLY;
-      newCustomerInvoice.customerInvoiceMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
-      newCustomerInvoice.total = 0;
-      newCustomerInvoice.currentUserBalance = user.balance;
-
-      await customerInvoiceRepository.save(newCustomerInvoice);
-
-      const customerOrders = await customerOrderRepository.find({
-        where: {
-          user: user,
-        },
-      });
-
-      for await (const customerOrder of customerOrders) {
-        newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
-        if (!customerOrder.monthly_customer_invoice_id) {
-          customerOrder.customerInvoice = newCustomerInvoice;
-          await customerOrderRepository.save(customerOrder);
-        }
+    for await (const customerOrder of customerOrders) {
+      newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
+      if (!customerOrder.customerInvoice) {
+        customerOrder.customerInvoice = newCustomerInvoice;
+        await customerOrderRepository.save(customerOrder);
       }
-
-      await customerInvoiceRepository.save(newCustomerInvoice);
     }
+
+    await customerInvoiceRepository.save(newCustomerInvoice);
+    // }
   }
 };
 
