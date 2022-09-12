@@ -6,7 +6,7 @@ import { CustomerInvoice } from '../../orm/entities/customerInvoices/CustomerInv
 import { CustomerOrderItem } from '../../orm/entities/customerOrderItems/CustomerOrderItem';
 import { CustomerOrder } from '../../orm/entities/customerOrders/CustomerOrder';
 import { Product } from '../../orm/entities/products/Product';
-import { Supplier } from '../../orm/entities/suppliers/Supplier';
+// import { Supplier } from '../../orm/entities/suppliers/Supplier';
 import { SystemState } from '../../orm/entities/systemState/SystemState';
 import { Token } from '../../orm/entities/tokens/Token';
 import { User } from '../../orm/entities/users/User';
@@ -29,10 +29,8 @@ const ormConfig: ConnectionOptions = {
 
   synchronize: true,
   logging: false,
-  // entities: ['src/orm/entities/**/*.{.ts,.js}'],
+  entities: [User, Token, SystemState, CustomerInvoice, CustomerOrderItem, CustomerOrder, Product],
 
-  // entities: [path.join(__dirname, '../entities/**/*.{.ts,.cd js}')],
-  entities: [User, Token, SystemState, CustomerInvoice, CustomerOrderItem, CustomerOrder, Product, Supplier],
   migrations: ['src/orm/migrations/**/*.{.ts,.js}'],
   subscribers: ['src/orm/subscriber/**/*.{.ts,.js}'],
   cli: {

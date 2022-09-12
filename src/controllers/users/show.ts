@@ -11,7 +11,17 @@ export const show = catchAsync(async (req: Request, res: Response, next: NextFun
   const userRepository = getRepository(User);
   try {
     const user = await userRepository.findOne(id, {
-      select: ['id', 'username', 'email', 'role', 'language', 'createdAt', 'updatedAt', 'isEmailNotfForOrderEnabled'],
+      select: [
+        'id',
+        'username',
+        'email',
+        'role',
+        'language',
+        'createdAt',
+        'updatedAt',
+        'isEmailNotfForOrderEnabled',
+        'balance',
+      ],
     });
 
     if (!user) {
