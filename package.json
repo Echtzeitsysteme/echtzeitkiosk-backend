@@ -7,10 +7,8 @@
     "dev:debug": "debug=* NODE_PATH=./src ts-node-dev --transpile-only --respawn --inspect=4001 ./src/index.ts",
     "build": "rimraf dist && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "NODE_PATH=./dist node ./dist/index.js",
-    "prepare": "husky install",
     "lint": "eslint --max-warnings 0 . && npm run tsc",
     "lint-fix": "eslint --fix .",
-    "lint-staged-husky": "lint-staged",
     "tsc": "tsc --noEmit",
     "format-lint": "prettier --config .prettierrc -l --ignore-unknown .",
     "format-fix": "prettier --config .prettierrc --write --ignore-unknown .",
@@ -54,8 +52,6 @@
     "zod": "^3.16.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.3",
-    "@commitlint/config-conventional": "^16.2.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
     "@types/chai": "^4.3.1",
@@ -74,14 +70,12 @@
     "@zerollup/ts-transform-paths": "^1.7.18",
     "chai": "^4.3.6",
     "commitizen": "^4.2.4",
-    "commitlint": "^16.3.0",
+    "cz-emoji": "^1.3.2-canary.2",
     "eslint": "^8.14.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-no-array-reduce": "^1.0.55",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.4.0",
     "mocha": "^9.2.2",
     "nyc": "^15.1.0",
     "prettier": "^2.6.2",
@@ -94,5 +88,10 @@
     "tsconfig-paths": "^4.1.0",
     "ttypescript": "^1.5.13",
     "typescript": "4.6.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-emoji"
+    }
   }
 }

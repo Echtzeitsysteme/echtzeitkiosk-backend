@@ -20,8 +20,6 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response) => {
     throw new CustomError(httpStatus.UNAUTHORIZED, 'General', 'Invalid token');
   }
 
-  // const userRepository = getRepository(User);
-
   if (verifiedEmailTokenRecord.isBlacklisted) {
     throw new CustomError(httpStatus.UNAUTHORIZED, 'General', 'Token is blacklisted');
   }

@@ -13,15 +13,7 @@ const router = Router();
 // CRUD functions
 router.get('/', [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])], list);
 
-router.post(
-  '/',
-  [
-    checkJwt,
-    checkRole([RoleType.SUPERUSER]),
-    //  validatorCreate
-  ],
-  create,
-);
+router.post('/', [checkJwt, checkRole([RoleType.SUPERUSER])], create);
 
 router.get('/:id', [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])], show);
 

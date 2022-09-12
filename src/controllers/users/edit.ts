@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
+import { SystemState } from 'orm/entities/systemState/SystemState';
 import { User } from 'orm/entities/users/User';
 import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
@@ -22,13 +23,31 @@ export const edit = catchAsync(async (req: Request, res: Response, next: NextFun
       user.isEmailNotfForOrderEnabled = isEmailNotfForOrderEnabled === 'true' ? true : false;
 
     if (username) user.username = username;
-    if (balance) user.balance = balance;
 
-    console.log(user);
+    const prevBalance = user.balance;
+    const newBalance = balance;
+    if (balance) {
+      user.balance = newBalance;
+    }
 
     try {
       await userRepository.save(user);
       res.customSuccess(200, 'User successfully saved.');
+
+      if (balance) {
+        const systemStateRepository = getRepository(SystemState);
+        const systemState = await systemStateRepository.findOne();
+
+        if (systemState) {
+          if (prevBalance > newBalance) {
+            systemState.balance = systemState.balance - (prevBalance - newBalance);
+          } else {
+            systemState.balance = systemState.balance + (newBalance - prevBalance);
+          }
+
+          await systemStateRepository.save(systemState);
+        }
+      }
     } catch (err) {
       const customError = new CustomError(409, 'Raw', `User '${user.email}' can't be saved.`, null, err);
       return next(customError);

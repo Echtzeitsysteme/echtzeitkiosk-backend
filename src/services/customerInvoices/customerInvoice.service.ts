@@ -2,6 +2,7 @@ import pdfKit from 'pdfkit';
 import { getRepository } from 'typeorm';
 
 import { config } from 'config/config';
+import { CustomerInvoiceType } from 'consts/CustomerInvoice';
 import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
 import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { User } from 'orm/entities/users/User';
@@ -18,38 +19,25 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
   const invoiceRows = [];
   const customerOrderRepository = getRepository(CustomerOrder);
 
-  // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 571 ~ customerInvoice.id', customerInvoice.id);
-
-  // find all customer orders
-  // const customerOrders = await customerOrderRepository.find({
-  //   relations: ['customerInvoice', 'user'],
-  //   where: {
-  //     monthly_customer_invoice_id: customerInvoice.id,
-  //   },
-  // });
-
   try {
-    // find all customer orders by customer invoice id and get also customerOrder.customerOrderItem.product
-    // const customerOrders = await customerOrderRepository.find({
-    //   relations: ['customerInvoice', 'customerOrderItems'],
-    //   where: {
-    //     customerInvoice: customerInvoice.id,
-    //   },
-    //   order: {
-    //     createdAt: 'ASC',
-    //   },
-    // });
     const customerOrders = await customerOrderRepository
       .createQueryBuilder('customerOrder')
       .leftJoinAndSelect('customerOrder.customerOrderItems', 'customerOrderItem')
       .leftJoinAndSelect('customerOrderItem.product', 'product')
-      .where('customerOrder.monthly_customer_invoice_id = :id', { id: customerInvoice.id })
+      .where('customerOrder.customer_invoice_id = :id', { id: customerInvoice.id })
       .orderBy('customerOrder.createdAt', 'ASC')
       .getMany();
 
-    // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 595 ~ customerOrders', customerOrders);
+    // const customerOrders = await customerOrderRepository.find({
+    //   where: {
+    //     customerInvoice: customerInvoice,
+    //   },
+    //   relations: ['customerOrderItems', 'customerOrderItems.product'],
+    // });
 
     let rowId = 1;
+
+    // console.log('customerOrders', customerOrders);
 
     customerOrders.forEach((customerOrder) => {
       customerOrder.customerOrderItems.forEach((customerOrderItem) => {
@@ -66,8 +54,6 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
         rowId++;
       });
     });
-
-    // console.log('🚀 ~ file: customerInvoice.service.ts ~ line 609 ~ invoiceRows', invoiceRows);
   } catch (error) {
     console.log(error);
   }
@@ -82,8 +68,18 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
 
       pdfDoc.image(companyLogo, 25, 20, { width: 50, height: 50 });
       pdfDoc.font(fontBold).fontSize(16).text('Echtzeitkiosk', 7, 75);
-      pdfDoc.font(fontNormal).fontSize(14).text('Monthly Invoice of Orders', 350, 30, { width: 200 });
-      pdfDoc.fontSize(10).text(customerInvoice.customerInvoiceMonthYear, 350, 46, { width: 200 });
+      if (customerInvoice.customerInvoiceType === CustomerInvoiceType.MONTHLY) {
+        pdfDoc.font(fontNormal).fontSize(14).text('Monthly Invoice of Orders', 350, 30, { width: 200 });
+        pdfDoc.fontSize(10).text(customerInvoice.customerInvoiceMonthYear, 350, 46, { width: 200 });
+      }
+      if (customerInvoice.customerInvoiceType === CustomerInvoiceType.AD_HOC) {
+        pdfDoc.font(fontNormal).fontSize(14).text('Ad Hoc Invoice', 350, 30, { width: 200 });
+        pdfDoc
+          .fontSize(10)
+          .text(customerInvoice.createdAt.toLocaleString('de-DE', { timeZone: 'Europe/Berlin' }), 350, 46, {
+            width: 200,
+          });
+      }
 
       pdfDoc.font(fontBold).text('Sold by:', 7, 100);
       pdfDoc.font(fontNormal).text('Technische Universität Darmstadt', 7, 115, { width: 250 });
@@ -178,9 +174,6 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       pdfDoc.font(fontBold).text(`${user.balance.toString() + ' €'}`, 450, y + 50);
 
       pdfDoc.end();
-
-      // return pdfDoc;
-      // console.log('pdf generate successfully');
     } catch (error) {
       console.log('Error occurred', error);
     }

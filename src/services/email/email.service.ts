@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { getRepository } from 'typeorm';
 
 import { config } from 'config/config';
+import { CustomerInvoiceType } from 'consts/CustomerInvoice';
 import { EmailType } from 'consts/EmailType';
 import { generateEmailText, generateEmailSubject } from 'helpers/email';
 import { getSuperuser } from 'helpers/users/superuserHelpers';
@@ -88,7 +89,18 @@ export const sendMonthlyInvoiceEmailToCustomer = async (user: User, customerInvo
   const customerInvoiceURL = `${config.deployment.backendURL}/customer-invoices/${customerInvoice.id}/generate-customer-invoice-pdf`;
   const customerInvoiceMonthYear = customerInvoice.customerInvoiceMonthYear;
 
-  const subject = `Echtzeitkiosk Invoice For ${customerInvoiceMonthYear}`;
+  const customerInvoiceType = customerInvoice.customerInvoiceType;
+
+  let subject = '';
+  if (customerInvoiceType === CustomerInvoiceType.MONTHLY) {
+    subject = `Echtzeitkiosk Invoice For ${customerInvoiceMonthYear}`;
+  }
+  if (customerInvoiceType === CustomerInvoiceType.AD_HOC) {
+    subject = `Echtzeitkiosk Invoice For ${new Date(customerInvoice.createdAt).toLocaleString('de-DE', {
+      timeZone: 'Europe/Berlin',
+    })}`;
+  }
+
   const text = `${customerInvoiceURL}`;
 
   await sendEmail(user.email, subject, text);

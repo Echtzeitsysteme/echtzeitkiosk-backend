@@ -32,6 +32,6 @@ export class CustomerOrder extends AbstractEntity {
   @ManyToOne(() => CustomerInvoice, (customerInvoice) => customerInvoice.customerOrders, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn([{ name: 'monthly_customer_invoice_id', referencedColumnName: 'id' }])
+  @JoinColumn([{ name: 'customer_invoice_id', referencedColumnName: 'id' }])
   customerInvoice: CustomerInvoice = new CustomerInvoice();
 }
