@@ -5,6 +5,8 @@ import {
   //  show, edit, destroy
   generateCustomerInvoicePDF,
   list,
+  sendCustomerInvoiceToEveryone,
+  sendCustomerInvoiceToUser,
 } from 'controllers/customerInvoices';
 import { checkJwt } from 'middleware/checkJwt';
 import { checkRole } from 'middleware/checkRole';
@@ -24,5 +26,16 @@ router.get(
 );
 
 router.get('/', [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])], list);
+
+router.post(
+  '/send-everyone',
+  [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])],
+  sendCustomerInvoiceToEveryone,
+);
+router.post(
+  '/send-to/:userId',
+  [checkJwt, checkRole([RoleType.SUPERUSER, RoleType.STANDARD])],
+  sendCustomerInvoiceToUser,
+);
 
 export default router;

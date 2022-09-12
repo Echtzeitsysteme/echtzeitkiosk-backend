@@ -9,7 +9,7 @@ import { sendMonthlyInvoiceEmailToCustomer } from '../../services/email/email.se
 
 // iterate over all users. For each user, check if the user has a customer invoice for the current month. If not, create a new customer invoice for the user. If the user has a customer invoice for the current month, then skip it. And then iterate over all customer orders for the user and then update the customer invoice balance and content.
 export const generateMonthlyInvoices = async () => {
-  console.log('generateMonthlyInvoices()');
+  // console.log('generateMonthlyInvoices()');
 
   const customerOrderRepository = getRepository(CustomerOrder);
   const userRepository = getRepository(User);
@@ -18,44 +18,46 @@ export const generateMonthlyInvoices = async () => {
   const users = await userRepository.find();
 
   for await (const user of users) {
-    // const customerInvoice = await customerInvoiceRepository.findOne({
-    //   where: {
-    //     user: user,
-    //     customerInvoiceType: CustomerInvoiceType.MONTHLY,
-    //     customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
-    //   },
-    // });
+    // TODO IMPORTANT
 
-    // if (!customerInvoice) {
-    if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
-
-    const newCustomerInvoice = new CustomerInvoice();
-    newCustomerInvoice.user = user;
-    newCustomerInvoice.customerInvoiceType = CustomerInvoiceType.MONTHLY;
-    newCustomerInvoice.customerInvoiceMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
-    newCustomerInvoice.total = 0;
-    newCustomerInvoice.currentUserBalance = user.balance;
-
-    await customerInvoiceRepository.save(newCustomerInvoice);
-
-    console.log(`Created new customer invoice for user ${user.id}`, newCustomerInvoice);
-
-    const customerOrders = await customerOrderRepository.find({
+    const customerInvoice = await customerInvoiceRepository.findOne({
       where: {
         user: user,
+        customerInvoiceType: CustomerInvoiceType.MONTHLY,
+        customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
       },
     });
 
-    for await (const customerOrder of customerOrders) {
-      newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
-      if (!customerOrder.customerInvoice) {
-        customerOrder.customerInvoice = newCustomerInvoice;
-        await customerOrderRepository.save(customerOrder);
-      }
-    }
+    if (!customerInvoice) {
+      if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
 
-    await customerInvoiceRepository.save(newCustomerInvoice);
-    // }
+      const newCustomerInvoice = new CustomerInvoice();
+      newCustomerInvoice.user = user;
+      newCustomerInvoice.customerInvoiceType = CustomerInvoiceType.MONTHLY;
+      newCustomerInvoice.customerInvoiceMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
+      newCustomerInvoice.total = 0;
+      newCustomerInvoice.currentUserBalance = user.balance;
+
+      await customerInvoiceRepository.save(newCustomerInvoice);
+
+      // console.log(`Created new customer invoice for user ${user.id}`, newCustomerInvoice);
+
+      const customerOrders = await customerOrderRepository.find({
+        where: {
+          user: user,
+        },
+      });
+
+      for await (const customerOrder of customerOrders) {
+        newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
+        if (!customerOrder.customerInvoice) {
+          customerOrder.customerInvoice = newCustomerInvoice;
+          await customerOrderRepository.save(customerOrder);
+        }
+      }
+
+      await customerInvoiceRepository.save(newCustomerInvoice);
+    }
   }
 };
 
@@ -64,7 +66,7 @@ export const generateMonthlyInvoices = async () => {
  * Send a link to the customer to generate and download the invoice
  */
 export const sendMonthlyInvoicesToCustomers = async () => {
-  console.log('sendMonthlyInvoicesToCustomers()');
+  // console.log('sendMonthlyInvoicesToCustomers()');
 
   const customerInvoiceRepository = getRepository(CustomerInvoice);
   const userRepository = getRepository(User);
@@ -72,15 +74,18 @@ export const sendMonthlyInvoicesToCustomers = async () => {
   const customerInvoices = await customerInvoiceRepository.find({
     where: {
       customerInvoiceType: CustomerInvoiceType.MONTHLY,
-      // customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
+      customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
     },
   });
 
   for await (const customerInvoice of customerInvoices) {
     const user = await userRepository.findOne(customerInvoice.user);
 
-    if (customerInvoice.customerInvoiceStatus === CustomerInvoiceStatus.PENDING) {
-      console.log(`Sending monthly invoice to ${user.email}`);
+    if (
+      customerInvoice.customerInvoiceType === CustomerInvoiceType.MONTHLY &&
+      customerInvoice.customerInvoiceStatus === CustomerInvoiceStatus.PENDING
+    ) {
+      // console.log(`Sending monthly invoice to ${user.email}`);
       sendMonthlyInvoiceEmailToCustomer(user, customerInvoice);
 
       // update the customer invoice
