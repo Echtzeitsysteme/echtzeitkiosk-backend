@@ -16,7 +16,10 @@ export class Token extends AbstractEntity {
   @Column({ type: 'enum', enum: TokenType })
   type: TokenType;
 
-  @ManyToOne(() => User, (user) => user.tokens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.tokens, {
+    // onDelete: 'CASCADE'
+    nullable: true,
+  })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User = new User();
 
