@@ -69,7 +69,7 @@ INVITATION_CODE=1A-2B-3C-4D # change this
 # At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
 MONTHLY_INVOICE_CRON_JOB_STRING=0 0 5 1 * *
 ```
-## GitHub Actions
+## CLI Commands
 Useful scripts/commands can be found in packag.json. Some of them are deprecated but still useful as example. The following scripts can be used:
 * `yarn dev`
   * Run the server in development mode with hot reloading
@@ -205,7 +205,7 @@ Init release.
 - [ ] Use websockets for real-time updates for React ⚡️
 - [ ] Improve SQL queries and relations 🙈
 - [ ] Use TypeORM migrations
-
+- [ ] Controller validations 🙈
 
 # Contributing
 
