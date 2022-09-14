@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, IsNull } from 'typeorm';
 
 import { CustomerInvoiceType, CustomerInvoiceStatus } from 'consts/CustomerInvoice';
 import { CustomerInvoice } from 'orm/entities/customerInvoices/CustomerInvoice';
@@ -18,7 +18,7 @@ export const generateMonthlyInvoices = async () => {
   const users = await userRepository.find();
 
   for await (const user of users) {
-    // TODO IMPORTANT
+    if (user.role === 'SUPERUSER') continue;
 
     const customerInvoice = await customerInvoiceRepository.findOne({
       where: {
@@ -29,8 +29,6 @@ export const generateMonthlyInvoices = async () => {
     });
 
     if (!customerInvoice) {
-      if (user.role === 'SUPERUSER') continue; // handle this case in the findOne query above
-
       const newCustomerInvoice = new CustomerInvoice();
       newCustomerInvoice.user = user;
       newCustomerInvoice.customerInvoiceType = CustomerInvoiceType.MONTHLY;
@@ -40,20 +38,18 @@ export const generateMonthlyInvoices = async () => {
 
       await customerInvoiceRepository.save(newCustomerInvoice);
 
-      // console.log(`Created new customer invoice for user ${user.id}`, newCustomerInvoice);
-
       const customerOrders = await customerOrderRepository.find({
         where: {
           user: user,
+          customerInvoice: IsNull(),
         },
       });
 
       for await (const customerOrder of customerOrders) {
         newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
-        if (!customerOrder.customerInvoice) {
-          customerOrder.customerInvoice = newCustomerInvoice;
-          await customerOrderRepository.save(customerOrder);
-        }
+
+        customerOrder.customerInvoice = newCustomerInvoice;
+        await customerOrderRepository.save(customerOrder);
       }
 
       await customerInvoiceRepository.save(newCustomerInvoice);
@@ -69,29 +65,23 @@ export const sendMonthlyInvoicesToCustomers = async () => {
   // console.log('sendMonthlyInvoicesToCustomers()');
 
   const customerInvoiceRepository = getRepository(CustomerInvoice);
-  const userRepository = getRepository(User);
 
   const customerInvoices = await customerInvoiceRepository.find({
     where: {
       customerInvoiceType: CustomerInvoiceType.MONTHLY,
       customerInvoiceMonthYear: `${new Date().getMonth() + 1}-${new Date().getFullYear()}`,
+      customerInvoiceStatus: CustomerInvoiceStatus.PENDING,
     },
+    relations: ['user'],
   });
 
   for await (const customerInvoice of customerInvoices) {
-    const user = await userRepository.findOne(customerInvoice.user);
+    console.log(`Sending monthly invoice to ${customerInvoice.user.email}`);
+    sendMonthlyInvoiceEmailToCustomer(customerInvoice.user, customerInvoice);
 
-    if (
-      customerInvoice.customerInvoiceType === CustomerInvoiceType.MONTHLY &&
-      customerInvoice.customerInvoiceStatus === CustomerInvoiceStatus.PENDING
-    ) {
-      // console.log(`Sending monthly invoice to ${user.email}`);
-      sendMonthlyInvoiceEmailToCustomer(user, customerInvoice);
-
-      // update the customer invoice
-      customerInvoice.customerInvoiceStatus = CustomerInvoiceStatus.SENT;
-      await customerInvoiceRepository.save(customerInvoice);
-    }
+    // update the customer invoice
+    customerInvoice.customerInvoiceStatus = CustomerInvoiceStatus.SENT;
+    await customerInvoiceRepository.save(customerInvoice);
   }
 };
 

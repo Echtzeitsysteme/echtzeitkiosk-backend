@@ -18,7 +18,6 @@ export const sendCustomerInvoiceToUser = catchAsync(async (req: Request, res: Re
 
   try {
     const user = await userRepository.findOne(userId);
-    console.log('user', user);
 
     if (user && user.role !== 'SUPERUSER') {
       const customerOrders = await customerOrderRepository.find({

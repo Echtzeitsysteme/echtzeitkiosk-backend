@@ -11,6 +11,7 @@ export class CustomerOrderItem extends AbstractEntity {
   @ManyToOne(() => Product, (product) => product.id, {
     //! TODO  check if this is correct
     onDelete: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn([{ name: 'product_id', referencedColumnName: 'id' }])
   product: Product;
@@ -39,6 +40,7 @@ export class CustomerOrderItem extends AbstractEntity {
 
   @ManyToOne(() => CustomerOrder, (customerOrder) => customerOrder.customerOrderItems, {
     onDelete: 'CASCADE',
+    nullable: true,
   })
   @JoinColumn([{ name: 'customer_order_id', referencedColumnName: 'id' }])
   customerOrder: CustomerOrder;

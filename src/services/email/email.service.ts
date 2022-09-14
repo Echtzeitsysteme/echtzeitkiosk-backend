@@ -139,8 +139,6 @@ Order Date: ${customerOrder.createdAt.toLocaleString('de-DE', {
     timeZone: 'Europe/Berlin',
   })}
 
-Customer Invoice ID: ${customerOrder.customerInvoice || 'Not yet assigned'}
-
 Your current balance: ${user.balance}
 
 Your total spending: ${user.totalSpent}

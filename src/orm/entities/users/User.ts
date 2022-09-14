@@ -80,13 +80,13 @@ export class User extends AbstractEntity {
   })
   totalSpent: number; // TODO use/implement this field
 
-  @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user)
+  @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user, { onDelete: 'CASCADE', nullable: true })
   customerOrders: CustomerOrder[];
 
-  @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user)
+  @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user, { onDelete: 'CASCADE', nullable: true })
   customerInvoices: CustomerInvoice[];
 
-  @OneToMany(() => Token, (token) => token.user)
+  @OneToMany(() => Token, (token) => token.user, { onDelete: 'CASCADE', nullable: true })
   tokens: Token[];
 
   setLanguage(language: Language) {

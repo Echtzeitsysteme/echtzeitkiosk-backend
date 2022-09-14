@@ -8,15 +8,16 @@ export class MonthlyInvoiceCronJobManager {
   private static cronJobManager: CronJobManager = new CronJobManager(
     'MONTHLY_INVOICE_CRON_JOB',
     config.deployment.monthlyInvoiceCronJobString, // At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
-    // '0 * * * * *',
-    // '* * * * * *',
+    // '0 * * * * *', // every minute
+    // '* * * * * *', // every second
+    // '0,10,20,30,40,50 * * * * *', // every 10 seconds
 
     // (() => {
     //   const date = new Date();
     //   date.setSeconds(date.getSeconds() + 3);
 
     //   return date;
-    // })(),
+    // })(), // 3 seconds from now
 
     async () => {
       await MonthlyInvoiceCronJobManager.sendMonthlyInvoices();

@@ -1,3 +1,5 @@
+import path from 'path';
+
 import pdfKit from 'pdfkit';
 import { getRepository } from 'typeorm';
 
@@ -14,7 +16,8 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
 ) => {
   const fontNormal = 'Helvetica';
   const fontBold = 'Helvetica-Bold';
-  const companyLogo = './es_logo_gross.jpeg';
+  // const companyLogo = './es_logo_gross.jpeg';
+  const companyLogo = path.join(__dirname, '../../../', 'es_logo_gross.jpeg');
 
   const invoiceRows = [];
   const customerOrderRepository = getRepository(CustomerOrder);
@@ -36,8 +39,6 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
     // });
 
     let rowId = 1;
-
-    // console.log('customerOrders', customerOrders);
 
     customerOrders.forEach((customerOrder) => {
       customerOrder.customerOrderItems.forEach((customerOrderItem) => {
@@ -172,6 +173,9 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
 
       pdfDoc.font(fontBold).text('User Balance:', 350, y + 50);
       pdfDoc.font(fontBold).text(`${user.balance.toString() + ' €'}`, 450, y + 50);
+
+      pdfDoc.font(fontBold).text('Total Spending History:', 310, y + 70);
+      pdfDoc.font(fontBold).text(`${user.totalSpent.toString() + ' €'}`, 450, y + 70);
 
       pdfDoc.end();
     } catch (error) {
