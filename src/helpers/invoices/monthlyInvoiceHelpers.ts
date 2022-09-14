@@ -9,7 +9,7 @@ import { sendMonthlyInvoiceEmailToCustomer } from '../../services/email/email.se
 
 // iterate over all users. For each user, check if the user has a customer invoice for the current month. If not, create a new customer invoice for the user. If the user has a customer invoice for the current month, then skip it. And then iterate over all customer orders for the user and then update the customer invoice balance and content.
 export const generateMonthlyInvoices = async () => {
-  console.log('generateMonthlyInvoices()');
+  // console.log('generateMonthlyInvoices()');
 
   const customerOrderRepository = getRepository(CustomerOrder);
   const userRepository = getRepository(User);
@@ -45,8 +45,6 @@ export const generateMonthlyInvoices = async () => {
         },
       });
 
-      console.log('customerOrders', customerOrders);
-
       for await (const customerOrder of customerOrders) {
         newCustomerInvoice.total = newCustomerInvoice.total + customerOrder.total;
 
@@ -64,7 +62,7 @@ export const generateMonthlyInvoices = async () => {
  * Send a link to the customer to generate and download the invoice
  */
 export const sendMonthlyInvoicesToCustomers = async () => {
-  console.log('sendMonthlyInvoicesToCustomers()');
+  // console.log('sendMonthlyInvoicesToCustomers()');
 
   const customerInvoiceRepository = getRepository(CustomerInvoice);
 

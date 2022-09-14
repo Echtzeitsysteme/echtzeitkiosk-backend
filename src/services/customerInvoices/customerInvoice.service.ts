@@ -174,6 +174,9 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
       pdfDoc.font(fontBold).text('User Balance:', 350, y + 50);
       pdfDoc.font(fontBold).text(`${user.balance.toString() + ' €'}`, 450, y + 50);
 
+      pdfDoc.font(fontBold).text('Total Spending History:', 310, y + 70);
+      pdfDoc.font(fontBold).text(`${user.totalSpent.toString() + ' €'}`, 450, y + 70);
+
       pdfDoc.end();
     } catch (error) {
       console.log('Error occurred', error);

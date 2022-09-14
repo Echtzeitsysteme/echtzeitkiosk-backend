@@ -6,10 +6,19 @@ import { SystemState } from 'orm/entities/systemState/SystemState';
 import { catchAsync } from 'utils/catchAsync';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
+interface NewProduct {
+  productTitle: string;
+  resalePricePerUnit: number;
+  quantity: number;
+  productPhotoUrl?: string;
+}
+
 export const create = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const productRepository = getRepository(Product);
   try {
-    const product = await productRepository.save(req.body);
+    const newProduct: NewProduct = req.body;
+
+    const product = await productRepository.save(newProduct);
 
     res.customSuccess(200, 'Product successfully saved.', product);
 

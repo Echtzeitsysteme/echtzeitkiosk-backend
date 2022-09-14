@@ -19,7 +19,10 @@ export const edit = catchAsync(async (req: Request, res: Response, next: NextFun
     }
 
     const { quantity: prevQuantity, resalePricePerUnit: prevResalePricePerUnit } = product;
-    const { quantity: newQuantity, resalePricePerUnit: newResalePricePerUnit } = req.body;
+    const {
+      quantity: newQuantity,
+      resalePricePerUnit: newResalePricePerUnit,
+    }: { quantity: number; resalePricePerUnit: number } = req.body;
 
     const updatedProduct = await productRepository.save({
       ...product,
