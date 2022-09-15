@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --production --frozen-lockfile --network-timeout 1000000
 
 COPY . .
 
@@ -26,7 +26,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json yarn.lock ./
 
-RUN yarn install --production --frozen-lockfile
+RUN yarn install --production --frozen-lockfile --network-timeout 1000000
 
 COPY --from=builder /usr/src/app/dist ./dist
 RUN mkdir -p /usr/src/app/log

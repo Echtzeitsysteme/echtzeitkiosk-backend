@@ -1,4 +1,4 @@
-# Echtzeitkiosk - Frontend
+# Echtzeitkiosk - Backend
 
 At the department of Real-Time Systems Lab (ES) at the Technische Universität Darmstadt, employees of the department got together and opened a small kiosk with self-service in the common kitchen. The kiosk was independently filled with different goods to build up a certain stock.  Initially it was financed by an appointed employee (from now on called administrator/superuser) who took over the administration of the kiosk and regularly checked the stock. As a result, any employee at the department is able to purchase available products from the kiosk with one payment. In the context of the project seminar software systems at the TU Darmstadt the two authors of this document are to develop a digital solution for inventory and invoice management. This GitHub repository contains the backend code of the project. The frontend code can be found [here](https://github.com/Echtzeitsysteme/echtzeitkiosk-frontend). You can fork this repository and use it as a template for your own project. The frontend is written in TypeScript with [React.js](https://reactjs.org/) and uses [Material-UI](https://material-ui.com/) with the react-admin library for the user interface. The backend is also written in TypeScript with [Node.js](https://nodejs.org/en/) and uses [Express.js](https://expressjs.com/) as web framework. The database is a [PostgreSQL](https://www.postgresql.org/) database and TypeORM is chosen as an object-relational mapper (ORM). Easy deployment with [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) is supported. You can utilize Traefikv2 as a reverse proxy and Let's Encrypt for SSL certificates easily with the provided docker-compose files which contains also Portainer for container management & monitoring and Adminer for database management on browser. Customer invoices can be sent via email manually or automatically using cron jobs. JWT authentication with role based authorization is implemented.
 
@@ -69,7 +69,7 @@ INVITATION_CODE=1A-2B-3C-4D # change this
 # At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
 MONTHLY_INVOICE_CRON_JOB_STRING=0 0 5 1 * *
 ```
-## GitHub Actions
+## CLI Commands
 Useful scripts/commands can be found in packag.json. Some of them are deprecated but still useful as example. The following scripts can be used:
 * `yarn dev`
   * Run the server in development mode with hot reloading
@@ -205,7 +205,7 @@ Init release.
 - [ ] Use websockets for real-time updates for React ⚡️
 - [ ] Improve SQL queries and relations 🙈
 - [ ] Use TypeORM migrations
-
+- [ ] Controller validations 🙈
 
 # Contributing
 
