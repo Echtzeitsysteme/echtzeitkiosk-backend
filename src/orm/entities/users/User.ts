@@ -13,6 +13,8 @@ import { Token } from '../tokens/Token';
 
 @Entity('users')
 export class User extends AbstractEntity {
+  id: string;
+
   @Column({ type: 'enum', enum: RoleType, default: RoleType.STANDARD })
   role: RoleType;
 
@@ -86,7 +88,11 @@ export class User extends AbstractEntity {
   @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user, { onDelete: 'CASCADE', nullable: true })
   customerInvoices: CustomerInvoice[];
 
-  @OneToMany(() => Token, (token) => token.user, { onDelete: 'CASCADE', nullable: true })
+  @OneToMany(
+    () => Token,
+    (token) => token.user,
+    //  { onDelete: 'CASCADE', nullable: true }
+  )
   tokens: Token[];
 
   setLanguage(language: Language) {

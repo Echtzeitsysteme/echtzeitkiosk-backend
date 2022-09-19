@@ -6,7 +6,7 @@
     "lib": ["es2021"],
     "sourceMap": true,
     "outDir": "./dist",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

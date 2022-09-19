@@ -31,4 +31,6 @@ export class Product extends AbstractEntity {
 
   @OneToMany(() => CustomerOrderItem, (customerOrderItem) => customerOrderItem.product)
   customerOrderItem: CustomerOrderItem[];
+
+  id: string;
 }

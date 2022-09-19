@@ -68,6 +68,18 @@ INVITATION_CODE=1A-2B-3C-4D # change this
 
 # At 05:00 AM, on day 1 of the every month, https://crontab.cronhub.io/
 MONTHLY_INVOICE_CRON_JOB_STRING=0 0 5 1 * *
+
+
+
+##############################################
+### TESTING ### 
+##############################################
+
+TEST_CUSTOMER_1_EMAIL=mertalp.ulus+customer1@gmail.com
+TEST_CUSTOMER_1_PASSWORD=Password123!
+TEST_CUSTOMER_2_EMAIL=mertalp.ulus+customer2@gmail.com
+TEST_CUSTOMER_2_PASSWORD=Password123!
+
 ```
 ## CLI Commands
 Useful scripts/commands can be found in packag.json. Some of them are deprecated but still useful as example. The following scripts can be used:
@@ -117,6 +129,18 @@ Useful scripts/commands can be found in packag.json. Some of them are deprecated
 #### docker-compose.with-traefik.yml
 * `./docker-compose.with-traefik.yml` is used to run the application in production mode with Traefikv2 and Let's Encrypt. You can use it for production purposes. Be sure that you set open required ports in your firewall for the services that you want to expose to the internet. You can play with labels to configure Traefikv2.
   * Check this documentation: https://rafrasenberg.com/posts/docker-container-management-with-traefik-v2-and-portainer/
+
+
+## Testing
+
+### Setup
+* Run `yarn docker:db-test` to start the database in test mode. Check `./test/.env.db-test` for DB connection details. It is not necessary to run this command before running tests, but it is recommended to check if the database is working properly.
+
+### Run tests
+* Run `yarn test:system` to run a system test. It will run the server in test mode and run some tests against the server sequentially. You can check the tests in `./test/system/system.test.ts` file.
+
+### Notes
+* Edit `sendEmail` function in `./src/services/email/email.service.ts`  to activate email sending while testing. However, it can cause problems with your SMTP provider. 
 
 ## Server Infrastructure
 Follow this documentation to set up your server infrastructure with SSL and reverse proxy: https://rafrasenberg.com/posts/docker-container-management-with-traefik-v2-and-portainer/

@@ -13,26 +13,28 @@ import { CustomerOrder } from 'orm/entities/customerOrders/CustomerOrder';
 import { User } from 'orm/entities/users/User';
 
 export const sendEmail = async (to: string, subject: string, text: string) => {
-  Joi.assert(config.email.from.address, Joi.string().email()); // informative error message
-  Joi.assert(to, Joi.string().email()); // informative error message
+  if (config.env !== 'test') {
+    Joi.assert(config.email.from.address, Joi.string().email()); // informative error message
+    Joi.assert(to, Joi.string().email()); // informative error message
 
-  let transport = nodemailer.createTransport(config.email.smtp);
-  if (config.env === 'development') console.info('Trying to connect to email server');
-  await transport
-    .verify()
-    .then(() => {
-      if (config.env === 'development') console.info('Connected to email server');
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    let transport = nodemailer.createTransport(config.email.smtp);
+    if (config.env === 'development') console.info('Trying to connect to email server');
+    await transport
+      .verify()
+      .then(() => {
+        if (config.env === 'development') console.info('Connected to email server');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-  // const msg = { from: `${config.email.from.name} < ${config.email.from.email}>`, to, subject, text };
-  const msg = { from: config.email.from, to, subject, text };
-  await transport.sendMail(msg);
-  transport.close();
-  transport = null;
-  if (config.env === 'development') console.info('Email sent, closing connection');
+    // const msg = { from: `${config.email.from.name} < ${config.email.from.email}>`, to, subject, text };
+    const msg = { from: config.email.from, to, subject, text };
+    await transport.sendMail(msg);
+    transport.close();
+    transport = null;
+    if (config.env === 'development') console.info('Email sent, closing connection');
+  }
 };
 
 export const sendVerificationEmail = async (user: User) => {

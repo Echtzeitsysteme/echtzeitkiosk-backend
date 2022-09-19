@@ -9,5 +9,11 @@ export const dbCreateConnectionAndCreateDefaultTablesWithDefaultValuesIfNotExist
     await createSystemStateTableIfNotExists();
     await createSuperuserIfnotExists();
 
+    // if no connection is established, try again in 10 seconds
+    if (!connection) {
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+      return dbCreateConnectionAndCreateDefaultTablesWithDefaultValuesIfNotExists();
+    }
+
     return connection;
   };

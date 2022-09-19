@@ -19,19 +19,10 @@ async function dropAllTables() {
 
 export const setupTestDBforSystemTest = async () => {
   beforeAll(async () => {
-    execSync('yarn docker:db-test', {
-      stdio: 'inherit',
-    });
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     try {
       console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-      await dropAllTables();
-      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      await dbCreateConnectionAndCreateDefaultTablesWithDefaultValuesIfNotExists();
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // wait for 1 second ?? xd
     } catch (error) {
       logger.error(error);
     }
@@ -45,9 +36,12 @@ export const setupTestDBforSystemTest = async () => {
       await closeDBConnection();
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      execSync('docker stop postgres_test && docker stop adminer_test', {
-        stdio: 'inherit',
-      });
+      execSync(
+        'docker stop postgres_test && docker stop adminer_test && docker rm --force --volumes adminer_test && docker rm --force --volumes postgres_test',
+        {
+          stdio: 'inherit',
+        },
+      );
     } catch (error) {
       logger.error(error);
     }
