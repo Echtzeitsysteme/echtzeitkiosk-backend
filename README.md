@@ -217,17 +217,19 @@ Init release.
 - [ ] Better folder structure 🙈
 - [ ] Use JSON body instead of url-encoding 🙈 
 - [ ] Testing 🙈
+  - [x] Few tests for the backend added but not enough
 - [ ] Better CI/CD and linting\ 
   - [ ] lint-staged\🤕
   - [ ] husky🤕
   - [ ] ...
 - [ ] "DRY" 🙈
-- [ ] Use proper strict TypeScript with TSC_COMPILE_ON_ERROR=false... 🥲
+- [ ] Use proper strict TypeScript 🙈
   - [ ] Use more TypeScript features like Interfaces, Enums, etc. 🙈
 - [ ] Avoid loops inside loops 🙈
   - [ ] Use the built-in Promise object to optimize code 🙈
 - [ ] Use websockets for real-time updates for React ⚡️
 - [ ] Improve SQL queries and relations 🙈
+  - [x] Deletions are improved and anonymized, but still not perfect
 - [ ] Use TypeORM migrations
 - [ ] Controller validations 🙈
 
