@@ -22,6 +22,7 @@ export const list = catchAsync(async (req: Request, res: Response, next: NextFun
           order: {
             createdAt: 'DESC',
           },
+          withDeleted: true,
         })
         .then((customerOrders) => {
           return customerOrders.map((customerOrder) => {

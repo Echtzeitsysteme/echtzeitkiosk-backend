@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/de';
 import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
@@ -21,7 +22,11 @@ export const destroy = catchAsync(async (req: Request, res: Response, next: Next
     // const productQuantity = product.quantity;
     // const productPrice = product.resalePricePerUnit;
 
-    productRepository.delete(id);
+    product.productTitle = product.productTitle + faker.random.numeric(10) + '_deleted';
+
+    await productRepository.save(product);
+
+    await productRepository.softDelete(id);
 
     res.customSuccess(200, 'Product successfully deleted.', { id: product.id, productTitle: product.productTitle });
 

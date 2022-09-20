@@ -23,6 +23,7 @@ export const list = catchAsync(async (req: Request, res: Response, next: NextFun
           order: {
             createdAt: 'DESC',
           },
+          withDeleted: true,
         })
         .then((customerInvoices) => {
           return customerInvoices.map((customerInvoice) => {
@@ -51,6 +52,7 @@ export const list = catchAsync(async (req: Request, res: Response, next: NextFun
 
     return res.customSuccess(200, 'List of customer invoices.', customerInvoices);
   } catch (err) {
+    console.log(err);
     const customError = new CustomError(400, 'Raw', `Can't retrieve list of customer invoices.`, null, err);
     return next(customError);
   }
