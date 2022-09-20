@@ -15,13 +15,14 @@ export const generateCustomerInvoicePDF = catchAsync(async (req: Request, res: R
     const customerInvoice = await customerInvoiceRepository.findOne({
       where: { id: req.params.id },
       relations: ['user'],
+      withDeleted: true,
     });
 
     if (!customerInvoice)
       return next(new CustomError(404, 'General', `Customer invoice with id ${req.params.id} not found.`));
 
     const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ where: { id: customerInvoice.user.id } });
+    const user = await userRepository.findOne({ where: { id: customerInvoice.user.id }, withDeleted: true });
 
     if (!user) return next(new CustomError(404, 'General', `User with id ${customerInvoice.user} not found.`));
 
@@ -48,6 +49,7 @@ export const generateCustomerInvoicePDF = catchAsync(async (req: Request, res: R
 
     await customerInvoiceService.generateCustomerInvoicePDFandPipeToResponse(res, user, customerInvoice);
   } catch (error) {
+    console.log(error);
     next(new CustomError(500, 'General', error.message));
   }
 });

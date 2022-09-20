@@ -26,7 +26,7 @@ export const changePassword = catchAsync(async (req: Request, res: Response, nex
 
     user.password = passwordNew;
     user.hashPassword();
-    userRepository.save(user);
+    await userRepository.save(user);
 
     sendPasswordChangedEmail(user);
 

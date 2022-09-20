@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { Length, IsEmail, IsDate } from 'class-validator';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, DeleteDateColumn } from 'typeorm';
 
 import { RoleType } from 'consts/RoleType';
 import { AbstractEntity } from 'utils/AbstractEntity';
@@ -13,6 +13,11 @@ import { Token } from '../tokens/Token';
 
 @Entity('users')
 export class User extends AbstractEntity {
+  id: string;
+
+  @DeleteDateColumn() // https://wanago.io/2021/10/25/api-nestjs-soft-deletes-postgresql-typeorm/
+  deletedAt: Date;
+
   @Column({ type: 'enum', enum: RoleType, default: RoleType.STANDARD })
   role: RoleType;
 
@@ -80,13 +85,23 @@ export class User extends AbstractEntity {
   })
   totalSpent: number; // TODO use/implement this field
 
-  @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user, { onDelete: 'CASCADE', nullable: true })
+  @OneToMany(() => CustomerOrder, (customerOrder) => customerOrder.user, {
+    // onDelete: 'CASCADE',
+    nullable: true,
+  })
   customerOrders: CustomerOrder[];
 
-  @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user, { onDelete: 'CASCADE', nullable: true })
+  @OneToMany(() => CustomerInvoice, (customerInvoice) => customerInvoice.user, {
+    // onDelete: 'CASCADE',
+    nullable: true,
+  })
   customerInvoices: CustomerInvoice[];
 
-  @OneToMany(() => Token, (token) => token.user, { onDelete: 'CASCADE', nullable: true })
+  @OneToMany(
+    () => Token,
+    (token) => token.user,
+    //  { onDelete: 'CASCADE', nullable: true }
+  )
   tokens: Token[];
 
   setLanguage(language: Language) {

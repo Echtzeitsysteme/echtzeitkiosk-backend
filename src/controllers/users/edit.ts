@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm';
 import { SystemState } from 'orm/entities/systemState/SystemState';
 import { User } from 'orm/entities/users/User';
 import { catchAsync } from 'utils/catchAsync';
+import { financial } from 'utils/financial';
 import { CustomError } from 'utils/response/custom-error/CustomError';
 
 export const edit = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -24,10 +25,10 @@ export const edit = catchAsync(async (req: Request, res: Response, next: NextFun
 
     if (username) user.username = username;
 
-    const prevBalance = user.balance;
-    const newBalance = balance;
+    const prevBalance = financial(user.balance);
+    const newBalance = financial(balance);
     if (balance) {
-      user.balance = newBalance;
+      user.balance = financial(newBalance);
     }
 
     try {
@@ -40,9 +41,9 @@ export const edit = catchAsync(async (req: Request, res: Response, next: NextFun
 
         if (systemState) {
           if (prevBalance > newBalance) {
-            systemState.balance = systemState.balance - (prevBalance - newBalance);
+            systemState.balance = financial(systemState.balance) - financial(prevBalance - newBalance);
           } else {
-            systemState.balance = systemState.balance + (newBalance - prevBalance);
+            systemState.balance = financial(systemState.balance) + financial(newBalance - prevBalance);
           }
 
           await systemStateRepository.save(systemState);

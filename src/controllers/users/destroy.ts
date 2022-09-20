@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/de';
 import { Request, Response, NextFunction } from 'express';
 import { getRepository } from 'typeorm';
 
@@ -16,7 +17,19 @@ export const destroy = catchAsync(async (req: Request, res: Response, next: Next
       const customError = new CustomError(404, 'General', 'Not Found', [`User with id:${id} doesn't exists.`]);
       return next(customError);
     }
-    userRepository.delete(id);
+
+    user.firstName = 'Deleted';
+    user.lastName = 'Deleted';
+    // const randomUsername = 'random_' + faker.internet.userName().substring(0, 8) + faker.random.numeric(4) + '_deleted';
+    const randomUsername = faker.random.numeric(20) + '_deleted';
+    user.username = randomUsername;
+    user.email = randomUsername + '@es.tu-darmstadt.de';
+
+    user.password = 'PasswordDeleted123!';
+    user.hashPassword();
+    await userRepository.save(user);
+
+    await userRepository.softDelete(id);
 
     res.customSuccess(200, 'User successfully deleted.', { id: user.id, email: user.email });
   } catch (err) {

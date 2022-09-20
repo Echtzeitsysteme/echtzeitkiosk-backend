@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres-test:
+    container_name: 'postgres_test'
+    image: 'postgres:14.2-alpine'
+    command: postgres -c stats_temp_directory=/tmp # https://stackoverflow.com/questions/66325175/docker-container-with-postgres-warning-could-not-open-statistics-file-pg-stat
+    restart: unless-stopped
+    networks:
+      - default
+    env_file:
+      - .env.db-test
+    ports:
+      - '5432:5432'
+
+  adminer-test:
+    container_name: 'adminer_test'
+    # depends_on:
+    #   - postgres
+    image: adminer
+    networks:
+      - default
+    restart: unless-stopped
+    ports:
+      - '8081:8080'
+
+networks:
+  default:
+    name: postgre-adminer-network
+  # graphql-engine:
+  #     image: hasura/graphql-engine:v2.8.1
+  #     ports:
+  #       - "8081:8080"
+  #     depends_on:
+  #       - "db_postgres"
+  #     restart: unless-stopped
+  #     environment:
+  #       ## postgres database to store Hasura metadata
+  #       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  #       ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+  #       PG_DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  #       ## enable the console served by server
+  #       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+  #       ## enable debugging mode. It is recommended to disable this in production
+  #       HASURA_GRAPHQL_DEV_MODE: "true"
+  #       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+  #       ## uncomment next line to set an admin secret
+  #       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey

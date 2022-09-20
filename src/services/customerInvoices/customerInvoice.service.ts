@@ -20,14 +20,17 @@ export const generateCustomerInvoicePDFandPipeToResponse = async (
   const companyLogo = path.join(__dirname, '../../../', 'es_logo_gross.jpeg');
 
   const invoiceRows = [];
-  const customerOrderRepository = getRepository(CustomerOrder);
+  const customerOrderRepository = await getRepository(CustomerOrder);
 
   try {
-    const customerOrders = await customerOrderRepository
-      .createQueryBuilder('customerOrder')
+    const queryBuilderForCustomerOrders = await customerOrderRepository.createQueryBuilder('customerOrder');
+    queryBuilderForCustomerOrders.withDeleted();
+
+    const customerOrders = await queryBuilderForCustomerOrders
       .leftJoinAndSelect('customerOrder.customerOrderItems', 'customerOrderItem')
       .leftJoinAndSelect('customerOrderItem.product', 'product')
       .where('customerOrder.customer_invoice_id = :id', { id: customerInvoice.id })
+
       .orderBy('customerOrder.createdAt', 'ASC')
       .getMany();
 

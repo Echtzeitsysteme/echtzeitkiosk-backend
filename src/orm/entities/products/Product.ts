@@ -1,5 +1,5 @@
 import { IsUrl } from 'class-validator';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, DeleteDateColumn } from 'typeorm';
 
 // import { ProductCategory, ProductType } from 'consts';
 import { AbstractEntity } from 'utils/AbstractEntity';
@@ -9,6 +9,9 @@ import { CustomerOrderItem } from '../customerOrderItems/CustomerOrderItem';
 
 @Entity('products')
 export class Product extends AbstractEntity {
+  @DeleteDateColumn() // https://wanago.io/2021/10/25/api-nestjs-soft-deletes-postgresql-typeorm/
+  deletedAt: Date;
+
   @Column({ unique: true })
   productTitle: string;
 
@@ -31,4 +34,6 @@ export class Product extends AbstractEntity {
 
   @OneToMany(() => CustomerOrderItem, (customerOrderItem) => customerOrderItem.product)
   customerOrderItem: CustomerOrderItem[];
+
+  id: string;
 }

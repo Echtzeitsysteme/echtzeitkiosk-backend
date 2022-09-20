@@ -1,9 +1,9 @@
 import { Entity, JoinColumn, ManyToOne, Column, OneToMany } from 'typeorm';
 
-import { CustomerInvoiceType, CustomerInvoiceStatus } from 'consts/CustomerInvoice';
 import { AbstractEntity } from 'utils/AbstractEntity';
 import { ColumnNumericTransformer } from 'utils/ColumnNumericTransformer';
 
+import { CustomerInvoiceType, CustomerInvoiceStatus } from '../../../consts/CustomerInvoice';
 import { CustomerOrder } from '../customerOrders/CustomerOrder';
 import { User } from '../users/User';
 
