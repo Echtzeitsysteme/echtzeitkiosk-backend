@@ -34,6 +34,9 @@ app.use(
 
       'http://kiosk.fg.es.e-technik.tu-darmstadt.de',
       'https://kiosk.fg.es.e-technik.tu-darmstadt.de',
+      
+      'http://echtzeitkiosk.de',
+      'https://echtzeitkiosk.de',
     ],
     credentials: true,
   }),
