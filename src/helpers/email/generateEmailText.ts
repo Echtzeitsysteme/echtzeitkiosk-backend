@@ -84,7 +84,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.USER_REGISTERED_EMAIL_TO_SUPERUSER:
-      return `Hallo ${user.firstName} ${user.lastName},
+      return `Hallo ${config.projectName} Admin,
     
         Ein neuer Nutzer mit dem Namen ${user.firstName} ${user.lastName}
         und der E-Mail-Adresse ${user.email}
