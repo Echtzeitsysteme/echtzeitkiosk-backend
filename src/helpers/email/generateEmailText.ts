@@ -9,7 +9,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
 
       const verificationEmailUrl = `${config.deployment.frontendURL}/#/verify-email?token=${verifyEmailToken}`;
 
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
       Sie möchten ein neues Konto auf dem ${config.deployment.projectName}-Portal erstellen? 
       Zum Schutz Ihrer Daten müssen wir sicherstellen, dass diese E-Mail-Adresse Ihnen gehört. Bitte bestätigen Sie dafür den folgenden Link:
@@ -39,7 +39,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
 
       const resetPasswordUrl = `${config.deployment.frontendURL}/#/reset-password?token=${resetPasswordToken}`;
 
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
       Sie möchten Ihr Passwort zurücksetzen?
       Bitte bestätigen Sie dafür den folgenden Freischaltlink und vergeben sich danach ein neues Passwort:
@@ -63,7 +63,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
           `;
 
     case EmailType.PASSWORD_CHANGED:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         Sie haben vor kurzem erfolgreich Ihr ${config.deployment.projectName}-Kontopasswort geändert.
         Wenn Sie diese Anfrage nicht gestellt haben,
@@ -84,7 +84,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.USER_REGISTERED_EMAIL_TO_SUPERUSER:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${config.projectName} Admin,
     
         Ein neuer Nutzer mit dem Namen ${user.firstName} ${user.lastName}
         und der E-Mail-Adresse ${user.email}
@@ -102,7 +102,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.REGISTRATION_APPROVAL_EMAIL_TO_USER:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         wir haben Ihre Daten geprüft. Sie sind nun für das ${config.deployment.projectName}-Portal freigeschaltet.
         Sie können ab sofort die verfügbaren Produkte kaufen.  
@@ -123,7 +123,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.REGISTRATION_DECLINATION_EMAIL_TO_USER:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         wir haben Ihre Daten geprüft. Leider müssen wir Ihnen mitteilen,
         dass Ihre Registrierungsanfrage abgelehnt wurde.
@@ -144,7 +144,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.REGISTRATION_REQUEST_RECEIVED_EMAIL_TO_USER:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         das ${config.deployment.projectName}-Team prüft nun Ihre Registrierungsanfrage.
         Sie erhalten eine weitere E-Mail sobald Sie freigeschaltet sind.
@@ -170,7 +170,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.ACCOUNT_DELETED:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         Ihr Konto wurde gelöscht. 
         
@@ -190,7 +190,7 @@ const generateEmailTextForGerman = async (emailType: EmailType, user: User) => {
             `;
 
     case EmailType.MONTHLY_INVOICE:
-      return `Hallo Frau/Herr ${user.lastName},
+      return `Hallo ${user.firstName} ${user.lastName},
 
         
 
